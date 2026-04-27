@@ -16,6 +16,46 @@ In this project, we will analyze data from the IPUMS USA dataset (https://usa.ip
 
 ## SDSC Expanse Environment Setup 
 
+Notebook: [`expanse-env.ipynb`](./expanse-env.ipynb)
+
+For our setup, we requested `8` cores and `128GB` total memory.
+
+![jupyter-session](images/jupyter-session.png)
+
+Allowing us to do:
+
+```python
+spark = SparkSession.builder \
+    .config("spark.driver.memory", "2g") \
+    .config("spark.executor.memory", "18g") \
+    .config("spark.executor.instances", 7) \
+    .getOrCreate()
+```
+
+Formula for the above:
+
+- Executor instances = Total Cores - 1
+- Executor memory = (Total Memory - Driver Memory) / Executor Instances
+
+Our calculation:
+
+- Total Cores = `8`
+- Total Memory = `128GB`
+- Driver Memory = `2GB`
+- Executor Instances = `8 - 1 = 7`
+- Executor Memory = `(128 - 2) / 7 = 18GB` 
+
+
+### SparkSession Configuration and Justification
+
+When going through [Spark on HPC Best Practices: Example 3](https://github.com/ucsd-dsc232r/group-project/blob/main/SPARK_HPC_BEST_PRACTICES.md#example-3-8-cores-with-128gb-ram-high-memory), this setup most closely aligned with our needs. Since our data is 65GB, it's a fair amount above the 50GB that is mentioned in this example. 
+
+
+
+Spark executor/config evidence during data loading:
+
+![spark-ui](images/spark-config.png)
+
 ## Data Exploration using Spark
 
 Notebook: [`data-exploration.ipynb`](./data-exploration.ipynb)
