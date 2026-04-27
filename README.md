@@ -153,6 +153,44 @@ The income distribution appears to be between -19998 and 1945000 dollars with a 
 
 Notebook: [`data-plots.ipynb`](./data-plots.ipynb)
 
+Visualizations in this section are generated from Spark DataFrame aggregations and then plotted with `matplotlib`.
+
+### Plot 1: Income vs Education
+
+![Income vs Education](images/income-education-barchart.png)
+
+The chart shows a strong positive relationship between education level and average income, where earnings generally increase as education rises. Lower education levels (around 0–5) are associated with relatively low incomes (under ~20k), but there is a noticeable jump starting around mid-level education, and incomes increase sharply at higher levels, reaching above 60k–90k for the highest categories. This suggests that higher education significantly boosts earning potential, with the largest gains occurring at advanced levels rather than early stages of education.
+
+### Plot 2: Income Trend Over Time (2001-2024)
+
+![Income Trend Over Time](images/income-year-lineplot.png)
+
+The chart shows a clear long-term upward trend in average income from 2001 to 2024, rising from around 29k to nearly 55k, indicating steady economic growth over time. There is a noticeable dip around 2009–2011, likely reflecting an economic downturn, after which income resumes a consistent upward trajectory. Growth appears to accelerate after about 2015, with especially strong increases in the most recent years, suggesting improving economic conditions or rising wages, although the sharp rise toward the end could also reflect inflation or other external factors rather than purely real income growth.
+
+### Plot 3: Top 10 States by Average Income
+
+![Top 10 States by Average Income](images/top10-state-incomes.png)
+
+The chart shows that among the top 10 states, average income is relatively high but not evenly distributed—one state clearly leads (around ~63k), while the rest cluster in a slightly lower band (~43k–52k). This suggests a small number of states have a stronger concentration of high-paying industries or economic opportunities, creating a noticeable gap even within the top tier. Overall, it highlights that high income in the U.S. is concentrated in a few leading states rather than being uniformly spread across all top performers.
+
+### Plot 4: Income Trends by Education Level
+
+![Income Trends by Education Level](images/income-years-education-multi-lineplot.png)
+
+The chart shows that average income rises over time for all education levels, but the increase is much stronger at higher levels of education, leading to a widening gap between low- and high-educated groups. Lower education categories (EDUC 0–3) remain in the lower income range (roughly ~8k–17k) with only modest growth, while higher categories (like EDUC 7–10) show steady and much larger increases, reaching significantly higher income levels over time. This highlights that higher education not only leads to higher earnings but also benefits more from economic growth over time. In IPUMS, EDUC values represent attainment levels: for example, EDUC 0 = no schooling/N/A, 1 = elementary (up to ~4th grade), 2 = middle school (5th–8th), 3 = early high school (around 9th grade), meaning these lower codes correspond to relatively low levels of formal education.
+
+### Plot 5: Income by Race
+
+![Income by Race](images/income-race.png)
+
+The chart shows noticeable differences in average income across race categories, with some groups earning significantly higher (around ~45k–50k) while others are clustered much lower (around ~24k–27k), indicating clear income disparities across racial groups. A few categories stand out as top earners, while others consistently lag behind, suggesting unequal economic outcomes that may reflect differences in access to education, occupations, or systemic factors. In the IPUMS dataset, race is coded numerically, where common categories include 1 = White, 2 = Black/African American, 3 = American Indian/Alaska Native, 4 = Chinese, 5 = Japanese, 6 = Other Asian or Pacific Islander, 7 = Other race, 8 = Two major races, 9 = Three or more races, meaning each bar represents one of these racial groups rather than a continuous scale.
+
+### Plot 6: Education vs Income by Gender
+
+![Education vs Income by Gender](images/education-income-gender-multi-lineplot.png)
+
+The chart shows that income increases with education for both males and females, but males consistently earn more at every education level, and the gap widens as education increases.
+
 ## Preprocessing Plan 
 
 
