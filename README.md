@@ -82,7 +82,7 @@ The full dataset contains 238 columns, and complete descriptors for all variable
 - EDUC (Categorical): The person's educational attainment.
 - INCTOT (Numerical): The person's pre-tax total personal income (or loss).
 
-All categorical variables have some numeric coding scheme which correspond with qualitative categories. The coding scheme for these variables can be found in the code box below. These coding schemes and descriptions are found on the [IPUMS website](https://usa.ipums.org/usa-action/variables/group).
+All categorical variables have some numeric coding scheme which correspond with qualitative categories. These coding schemes and descriptions are found on the [IPUMS website](https://usa.ipums.org/usa-action/variables/group).
 
 ### Descriptive statistics for Numeric data
 
@@ -94,7 +94,7 @@ All categorical variables have some numeric coding scheme which correspond with 
 | min | 2001.0 | 0.0 | -19998.0 |
 | max | 2024.0 | 97.0 | 9999999.0 |
 
-Our dataset captures survey results between 2001 and 2024. Our age range is between 0 and 97 years old with an average age of approximately 41 years old. Since the maximum age is 97, there are no missing data because the assigned code for missing data is 999. According to the IPUMS website, for our dataset which covers 2001-2024, there are special codes to indicate certain circumstances:
+Our dataset captures survey results between 2001 and 2024. Our age range is between 0 and 97 years old with an average age of approximately 41 years old. Since the maximum age is 97, there are no missing data because the assigned code for missing data is 999. According to the IPUMS website, for our dataset which covers 2001-2024, there are special codes to indicate certain circumstances for the `INCTOT` column:
 
 - 0000000 = None
 - 0000001 = $1 or break even (2000, 2005-onward ACS and PRCS)
@@ -135,7 +135,7 @@ We can see that there are no null values in these columns. However, it remains t
 | 1.0 | 6,266 |
 | 9999999.0 | 11,690,872 |
 
-There are multiple instances of 9999999, indicating missing data. There are no instances of 9999998, and there are a significant number of instances of 0. This is likely a nice round number that survey participants would use to indicate that they had no income that year. To a lesser degree, the same could be said about the number of instaces of 1. The relatively low count of -19998 instances indicate that this is simply a lower bound, though it will be more clear in the plots section.
+There are multiple instances of 9999999, indicating missing data. There are no instances of 9999998, and there are a significant number of instances of 0. This is likely a nice round number that survey participants would use to indicate that they had no income that year. To a lesser degree, the same could be said about the number of instaces of 1. The relatively low count of -19998 instances indicate that this is simply a lower bound.
 
 If we remove the instances of 9999999, the income distribution is:
 
@@ -148,6 +148,9 @@ If we remove the instances of 9999999, the income distribution is:
 | max | 1,945,000.0 |
 
 The income distribution appears to be between -19998 and 1945000 dollars with a mean income of 39466.50 dollars.
+
+### Checking for code-defined missing data in Categorical Data
+There are code scheme defined codes for missing data in the EDUC (code 99), SEX (code 9), and STATEFIP (code 99) columns. We checked if there are any instances of this form of missing data using `.groupBy()` and `.count()`, but the tables in [`data-exploration.ipynb`](./data-exploration.ipynb) reveal that these codes were not used. All data points of interest are present within these columns.
 
 ## Data Plots
 
