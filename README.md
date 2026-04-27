@@ -193,6 +193,60 @@ The chart shows that income increases with education for both males and females,
 
 ## Preprocessing Plan 
 
+For preprocessing, we will clean and prepare the dataset before using it for analysis or modeling. Since this dataset is very large (around 67 million rows and 238 columns), all steps will be performed using Spark rather than local tools.
+
+### 1. Handling Missing Values
+
+Some variables use special values to represent missing data. For example, INCTOT has values such as 9999999, which do not represent real income.
+
+For numerical variables such as AGE and INCTOT, we will:
+
+- Replace these special values with null
+- Then fill missing values using mean or median if needed
+
+For categorical variables such as SEX, RACE, and EDUC, we will:
+
+- Treat invalid or unknown codes as null
+- Either keep them as null or replace with the most common category depending on the use case
+
+### 2. Handling Data Imbalance
+
+We will check if certain categories are imbalanced, especially for variables like SEX, RACE, and EDUC.
+
+If some categories are much more frequent than others, we may:
+
+- Use sampling methods
+- Or consider class weighting if we build models later
+
+### 3. Transformations
+
+For numerical features like AGE and INCTOT:
+
+- We will apply scaling (normalization or standardization)
+
+For categorical features like SEX, RACE, EDUC, and STATEFIP:
+
+- We will encode categories into model-ready numeric representations (for example, index encoding and one-hot style vectors when appropriate)
+
+For feature engineering:
+
+- We will create cleaned income features (for example, excluding special-code values from numeric summaries)
+- We will prepare derived grouping features for year and geography to support regional/time-based modeling
+- We will map state codes (STATEFIP values such as 1-56, including 1-50 for U.S. states) to readable state names/labels for geographic visualization (e.g., choropleth maps)
+- We will create an inflation-adjusted income feature (for example, `INCTOT_adjusted`) by joining annual inflation/CPI values by `YEAR` and scaling `INCTOT` into comparable dollars
+
+### 4. Spark Operations Planned for Preprocessing
+
+The preprocessing steps will be implemented with Spark DataFrame and Spark ML operations, including:
+
+- `withColumn`, `when`, `otherwise` to replace special codes with null
+- `filter`, `na.fill`, and summary statistics for null handling decisions
+- `groupBy().count()` and ratio checks to measure category imbalance
+- sampling operations to rebalance categories when needed
+- Spark ML transformers for categorical encoding and numeric scaling
+- join operations (`join` on `YEAR`) with external inflation/CPI reference data
+- mapping/state-label transformations for `STATEFIP` before choropleth plotting
+
 
 ## Team Contact
 
