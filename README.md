@@ -8,6 +8,7 @@ Group project for DSC 232R: Big Data Analytics Using Spark
 
 - Primary dataset: [IPUMS USA](https://usa.ipums.org/usa/)
 - Data access portal: [IPUMS USA Extract System](https://usa.ipums.org/usa-action/variables/group)
+- Citation: Steven Ruggles, Sarah Flood, Matthew Sobek, Daniel Backman, Grace Cooper, Julia A. Rivera Drew, Stephanie Richards, Renae Rodgers, Jonathan Schroeder, and Kari C.W. Williams. *IPUMS USA: Version 16.0* [dataset]. Minneapolis, MN: IPUMS, 2025. [https://doi.org/10.18128/D010.V16.0](https://doi.org/10.18128/D010.V16.0)
 
 ## Team Contact
 
