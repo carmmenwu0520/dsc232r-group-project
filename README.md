@@ -14,6 +14,10 @@ Group project for DSC 232R: Big Data Analytics Using Spark
 
 In this project, we will analyze data from the IPUMS USA dataset (https://usa.ipums.org/usa/), which provides harmonized U.S. census and survey data across multiple years. We will construct a dataset spanning 2001 to 2024 that includes variables such as total income, educational attainment, geographic region or state, survey year, age, sex, and employment status, with a total size exceeding 10 GB with millions of records. Our research investigates how the relationship between education and income varies across regions and time, and to what extent education predicts income across different geographic regions. Due to the large scale and complexity of the data, which includes millions of records across multiple years, this analysis cannot be efficiently performed on a standard laptop with limited memory and computational power. We will use distributed computing frameworks such as Spark to process and analyze the data at scale.
 
+---
+
+## Milestone 2
+
 ## SDSC Expanse Environment Setup 
 
 Notebook: [`expanse-env.ipynb`](./expanse-env.ipynb)
@@ -249,6 +253,44 @@ The preprocessing steps will be implemented with Spark DataFrame and Spark ML op
 - Spark ML transformers for categorical encoding and numeric scaling
 - join operations (`join` on `YEAR`) with external inflation/CPI reference data
 - mapping/state-label transformations for `STATEFIP` before choropleth plotting
+
+---
+
+## Milestone 3 
+
+## Complete Preprocessing using Spark 
+
+Notebook: [`data-preprocessing.ipynb`](./data-preprocessing.
+ipynb)
+
+
+### `RandomForestClassifier` (multiclass `EDUC`)
+
+Notebook: [`data-modeling.ipynb`](./data-modeling.ipynb)
+
+
+| model | split | accuracy | f1 | weightedPrecision |
+|:--|:--|--:|--:|--:|
+| RF `numTrees=20` `maxDepth=10` | train | 0.446404 | 0.333050 | 0.414931 |
+| RF `numTrees=20` `maxDepth=10` | val | 0.446472 | 0.333084 | 0.415042 |
+| RF `numTrees=20` `maxDepth=10` | test | 0.446635 | 0.333245 | 0.414820 |
+| RF `numTrees=30` `maxDepth=12` | train | 0.478052 | 0.389883 | 0.434884 |
+| RF `numTrees=30` `maxDepth=12` | val | 0.478075 | 0.389845 | 0.434680 |
+| RF `numTrees=30` `maxDepth=12` | test | 0.478180 | 0.389950 | 0.435532 |
+
+
+### `RandomForestRegressor` (`REALINCTOT`)
+
+Notebook: [`data-modeling-income.ipynb`](./data-modeling-income.ipynb)
+
+| model | split | rmse | mae | r2 |
+|:--|:--|--:|--:|--:|
+| RF `numTrees=20` `maxDepth=10` | train | 31627.08 | 15340.43 | 0.251201 |
+| RF `numTrees=20` `maxDepth=10` | val | 31647.34 | 15340.85 | 0.251349 |
+| RF `numTrees=20` `maxDepth=10` | test | 31620.07 | 15330.54 | 0.251243 |
+| RF `numTrees=30` `maxDepth=12` | train | 31565.51 | 15258.63 | 0.254113 |
+| RF `numTrees=30` `maxDepth=12` | val | 31587.00 | 15260.15 | 0.254201 |
+| RF `numTrees=30` `maxDepth=12` | test | 31559.95 | 15249.53 | 0.254087 |
 
 
 ## Team Contact
