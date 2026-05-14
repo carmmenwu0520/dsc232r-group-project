@@ -264,7 +264,17 @@ Notebook: [`data-preprocessing.ipynb`](./data-preprocessing.
 ipynb)
 
 
-### `RandomForestClassifier` (multiclass `EDUC`)
+### Models Used in This Study:
+
+
+1)Random Forest Classifier (Multiclass Education Prediction)->We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
+
+ 2) Random Forest Regressor-->We used a Random Forest Regressor to predict continuous income values (REALINCTOT) using demographic and socioeconomic variables such as age, education, sex, race, and state information. Random Forest Regression is an ensemble learning method that builds multiple decision trees and averages their predictions
+
+
+
+
+## `RandomForestClassifier` (multiclass `EDUC`)
 
 Notebook: [`data-modeling.ipynb`](./data-modeling.ipynb)
 
@@ -292,6 +302,28 @@ Notebook: [`data-modeling-income.ipynb`](./data-modeling-income.ipynb)
 | RF `numTrees=30` `maxDepth=12` | val | 31587.00 | 15260.15 | 0.254201 |
 | RF `numTrees=30` `maxDepth=12` | test | 31559.95 | 15249.53 | 0.254087 |
 
+
+### Fitting Analyis
+1)Where does your model fit in the fitting graph (underfitting vs. overfitting)?
+Ans: To see if our model is underfitting or overfitting , we need to compare the performance metrics of training set and validation set.
+
+a) Random Forest Classifier(multiclass EDUC prediction)->The evaluation metrics included accuracy, F1-score, and weighted precision. For the baseline model, we selected the Random Forest configuration with numTrees=20 and maxDepth=10. From the table above, we can observe that the training, validation, and test metrics were nearly identical across accuracy, F1-score, and weighted precision. This indicates that the model generalizes well to unseen data and does not show significant signs of overfitting or underfitting. However, the overall metric values are still relatively modest, with accuracy and F1-scores remaining below 50%. This suggests that the model may not be capturing enough predictive signal from the selected features, or that additional feature engineering and more informative variables may be required to improve multiclass education classification performance.
+
+b) RandomForestRegressor` (`REALINCTOT`)-->For this model, the performance metrics included RMSE, MAE and R2. For the baseline model e selected the RandomForestRegressor configuration with numTrees=20 and maxDepth=10. From the table above, the training, validation, and test results are nearly identical for both model configurations,indicating that the model generalizes consistently to unseen data and does not exhibit significant overfitting or underfitting. However, the relatively low R² values (approximately 0.25) suggest that the model explains only a limited portion of the variance in income. This indicates that the model may not be capturing enough predictive signal from the available features, or that the selected variables have limited explanatory power for income prediction.
+
+
+2)Build at least one model with different hyperparameters and compare results
+Ans:
+a)Random Forest Classifier(multiclass EDUC prediction)-For the Random Forest Classifier, we created another model using different hyperparameters: numTrees=30 and maxDepth=12. When compared with the baseline model (numTrees=20, maxDepth=10), the new model showed improved performance across all evaluation metrics. The baseline model achieved an accuracy of 44.6%, while the updated model achieved an accuracy of 47.8%. Similar improvements were also observed in F1-score and weighted precision.
+
+b) RandomForestRegressor`-For the Random Forest Regressor, we trained another model using different hyperparameters: numTrees=30 and maxDepth=12, and compared its performance with the baseline model (numTrees=20, maxDepth=10). The updated model showed slightly better performance across all regression metrics. The RMSE decreased from approximately 31,620 to 31,560, while the MAE decreased from about 15,330 to 15,249. Additionally, the R² score improved from 0.251 to 0.254. 
+
+3)Which model performs best and why?
+Ans- In both cases, the hyperparameter configuration with numTrees=30 and maxDepth=12 produced better results compared to the baseline model. This improvement can be attributed to the increased number of trees and greater tree depth, which allowed the Random Forest models to capture more complex patterns and relationships within the data. As a result, the models achieved improved performance in both income prediction and multiclass education classification tasks.
+
+
+4)What are the next models you are thinking of for Milestone 4 and why?
+Ans:As seen from the current results, although the models show stable generalization with no major signs of overfitting or underfitting, they still achieve relatively modest prediction and classification performance. For Milestone 4, we plan to explore more advanced models such as Gradient Boosted Trees (GBTClassifier and GBTRegressor) to better capture complex nonlinear relationships in the data. We also plan to improve feature engineering by adding more informative variables and interaction features, since the current results suggest that the existing features may not provide enough predictive signal for strong classification and income prediction performance.
 
 ## Team Contact
 
