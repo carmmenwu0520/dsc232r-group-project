@@ -325,6 +325,20 @@ Ans- In both cases, the hyperparameter configuration with numTrees=30 and maxDep
 # 4)What are the next models you are thinking of for Milestone 4 and why?
 Ans:As seen from the current results, although the models show stable generalization with no major signs of overfitting or underfitting, they still achieve relatively modest prediction and classification performance. For Milestone 4, we plan to explore more advanced models such as Gradient Boosted Trees (GBTClassifier and GBTRegressor) to better capture complex nonlinear relationships in the data. We also plan to improve feature engineering by adding more informative variables and interaction features, since the current results suggest that the existing features may not provide enough predictive signal for strong classification and income prediction performance.
 
+## Conclusion
+
+# 1)What is the conclusion of your 1st model?
+
+We trained two types of Random Forest models on over 67 million records of U.S. census data spanning 2001 to 2024: a Random Forest Classifier to predict multiclass education levels (EDUC) using features such as inflation-adjusted income (REALINCTOT_Z), age (AGE_Z), state (STATE_OH), sex (SEX_OH), and race (RACE_OH), and a Random Forest Regressor to predict real income (REALINCTOT) using education (EDUC), age, state, sex, and race as inputs. Both models demonstrated stable generalization, with training, validation, and test metrics remaining nearly identical, for example, the classifier achieved 47.8% accuracy on train, 47.8% on val, and 47.8% on test, while the regressor showed an R² of 0.254 across all three splits — indicating that we are not overfitting. However, the relatively modest absolute performance (classifier F1 ~0.39, regressor R² ~0.25) suggests that we are underfitting, meaning the current feature set does not carry enough predictive signal to fully explain either education level or income on its own.
+
+# 2)What can be done to possibly improve it?
+
+We believe there are several directions we can explore to improve model performance. First, we plan to expand our feature set by incorporating additional variables from the IPUMS dataset such as occupation, hours worked per week, and marital status, which are likely to have stronger correlations with income than the demographic variables we currently use. Second, since REALINCTOT is heavily right-skewed, with values ranging from near zero to over $9,999,999, we plan to apply a log transformation to income before regression, which should allow the model to better capture patterns across the full income range. Third, we noticed that the EDUC label distribution is uneven across categories, so we plan to experiment with class weighting to give the model a more balanced view of minority education levels during training. Finally, rather than manually comparing two hyperparameter configurations as we did in this milestone ( numTrees=20/maxDepth=10 vs. numTrees=30/maxDepth=12), we plan to run a proper cross-validated grid search to more systematically identify the best model settings.
+
+# 3)How did distributed computing help with this task?
+
+Distributed computing was essential for this project given the scale of our dataset, which contains over 67 million records across 238 columns and exceeds 65 GB in size. During development, we found that attempting to run preprocessing and model training locally caused the server to crash repeatedly due to memory limitations, which is why we moved to saving the final preprocessed data as a Parquet file and loading it directly for modeling. By running on SDSC Expanse with 7 executor instances each allocated 18 GB of memory (totaling 126 GB across executors), we were able to hold the full dataset in distributed memory and train our Random Forest models, for example, fitting the Random Forest Regressor with numTrees=30 and maxDepth=12 across the full training split, in a reasonable amount of time that would not have been possible on a single machine.
+
 ## Team Contact
 
 For project questions, reach out to:
