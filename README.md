@@ -260,8 +260,7 @@ The preprocessing steps will be implemented with Spark DataFrame and Spark ML op
 
 ## Complete Preprocessing using Spark 
 
-Notebook: [`data-preprocessing.ipynb`](./data-preprocessing.
-ipynb)
+Notebook: [`data-preprocessing.ipynb`](./data-preprocessing.ipynb)
 
 
 ### Models Used in This Study:
