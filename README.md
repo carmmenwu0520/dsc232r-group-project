@@ -338,6 +338,28 @@ We believe there are several directions we can explore to improve model performa
 
 Distributed computing was essential for this project given the scale of our dataset, which contains over 67 million records across 238 columns and exceeds 65 GB in size. During development, we found that attempting to run preprocessing and model training locally caused the server to crash repeatedly due to memory limitations, which is why we moved to saving the final preprocessed data as a Parquet file and loading it directly for modeling. By running on SDSC Expanse with 7 executor instances each allocated 18 GB of memory (totaling 126 GB across executors), we were able to hold the full dataset in distributed memory and train our Random Forest models, for example, fitting the Random Forest Regressor with numTrees=30 and maxDepth=12 across the full training split, in a reasonable amount of time that would not have been possible on a single machine.
 
+## Speedup Analysis
+
+Notebook: [`speedup-analysis.ipynb`](./speedup-analysis.ipynb)
+
+Here, we run the RF classifier on the training data found in `data-modeling.ipynb` three times for each executor proccess. As mentioned in the Speedup Measurement Guide, we ignore the first time (t1) as it's treated as a JVM warmup for the configuration and average t2 and t3. 
+
+We yield the following results on 1 exectutor (baseline) and 7 executors.
+
+| Executors | Time (sec) | Speedup | Efficiency |
+|---|---:|---:|---:|
+| 1 | 7593.4 | 1.00x | 100% |
+| 7 | 1025.7 | 7.40x | 105.8% |
+
+**Metrics:** 
+
+* T_1 = 7593.41s 
+* T_7 = 1025.67s
+* speedup = T_1/T_7 = **7.40×**
+* efficiency = speedup/7 = **105.8%**
+
+**Amdahl:** We get our estimated parallelizable fraction p = 7 × 6.40 / (7.40 x 6) = 44.8 / 44.4 ≈ **1** (from measured speedup). This leads to a theoretical speedup at n = 7 with this p is **≈ 7.40×** and we achieved esentially 100% of that limit. Training time dropped from ~2.1 hours (1 executor) to ~17 minutes (7 executors) which goes to show the tree building benefits from distributed Spark executors on this dataset.
+
 ## Team Contact
 
 For project questions, reach out to:
