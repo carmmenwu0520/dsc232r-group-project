@@ -1,0 +1,49 @@
+version: 1
+project:
+  title: Introduction
+  authors:
+    - name: Edwin Vargas Navarro
+    - name: Evan Lim
+    - name: Jiamin Wu
+    - name: Noopur Chowdary
+  github: jedwin4321/dsc232r-group-project
+  jupyter: true
+  toc:
+    - file: jupyter-book/intro.md
+    - file: jupyter-book/figures.md
+    - file: jupyter-book/methods.md
+    - file: jupyter-book/results.md
+    - file: jupyter-book/discussion.md
+    - file: jupyter-book/conclusion.md
+    - file: jupyter-book/collaboration.md
+    - file: jupyter-book/extra-credit.md
+    - title: Notebooks
+      children:
+        - title: SDSC Expanse & Spark Setup
+          file: expanse-env.ipynb
+        - title: Data Extraction (IPUMS)
+          file: data-extraction-all-col.ipynb
+        - title: Data Exploration
+          file: data-exploration.ipynb
+        - title: Exploratory Plots & Figures
+          file: data-plots.ipynb
+        - title: Spark Preprocessing Pipeline
+          file: data-preprocessing.ipynb
+        - title: "Model 1: Random Forest Classifier (EDUC)"
+          file: data-modeling.ipynb
+        - title: "Model 1: Random Forest Regressor (Income)"
+          file: data-modeling-income.ipynb
+        - title: Speedup Analysis
+          file: speedup-analysis.ipynb
+site:
+  title: Introduction
+  template: book-theme
+  options:
+    favicon: images/ds-gps.png
+    logo: images/ds-gps.png
+    logo_text: US Census Income and Education Analysis
+    show_toc_level: 2
+    show_navbar_depth: 2
+  parts:
+    primary_sidebar_footer: |
+      Education and Income at Scale

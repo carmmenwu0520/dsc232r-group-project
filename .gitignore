@@ -1,0 +1,44 @@
+# Jupyter Book / MyST build output
+_build/
+jupyter-book/_build/
+_build/execute/
+milestones/*
+
+# MyST / npm web assets
+node_modules/
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Data (large generated artifacts)
+data/final_preprocessed/
+data/final_preprocessed_2/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Secrets
+.env
+.env.*
+
+# Spark / cluster
+metastore_db/
+derby.log
+spark-warehouse/
