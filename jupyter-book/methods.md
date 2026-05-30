@@ -127,38 +127,34 @@ There are code scheme defined codes for missing data in the EDUC (code 99), SEX 
 
 
 
-**Preprocessing Plan**
+# Preprocessing Plan
 
 Before analysis and modeling, the dataset was cleaned and transformed to improve data quality and prepare the data for machine learning and visualization tasks. Because the dataset contained approximately 67 million records and 238 variables, all preprocessing operations were performed using Spark.
 
-## 1. Handling Missing Values
+### 1. Handling Missing Values
 
-# For numerical variables such as AGE and INCTOT:
+### For numerical variables such as AGE and INCTOT:
 
 Special missing-value codes were identified and replaced with null values.
 The proportion of missing values was examined for each variable.
 Missing values were imputed using appropriate summary statistics when necessary.
 Variables with excessive missingness were evaluated before further analysis.
 
-# For categorical variables such as SEX, RACE, EDUC, and MARST:
+### For categorical variables such as SEX, RACE, EDUC, and MARST:
 
 Invalid or unknown category codes were identified and converted to null values.
 Missing categories were retained or imputed depending on the analytical requirements.
 
-## 2. Handling Data Imbalance
-
+### 2. Handling Data Imbalance
 The distributions of key categorical variables were evaluated to determine the presence of class imbalance.
-
 Variables examined included:
-
 SEX
 RACE
 EDUC
 STATEFIP
-
 Category frequencies were calculated using Spark aggregation functions. The results were used to assess whether additional balancing techniques would be required during model development.
 
-## 3. Transformations
+### 3. Transformations
 
 For numerical features like AGE and INCTOT:
 
@@ -203,7 +199,7 @@ Outcome
 The preprocessing stage produced a cleaned and transformed dataset suitable for modelling , visualization, dimensionality reduction, and machine learning. Missing values were handled appropriately, categorical variables were encoded, numerical variables were standardized, inflation-adjusted income measures were created, and additional engineered features were generated to improve analytical usefulness.
 
 
-### **Model 1### ( first distributed model)
+# **Model-1( first distributed model)
 
 As an initial modeling approach, Random Forest algorithms were applied to both classification and regression tasks to establish strong baseline models and evaluate the predictive power of the demographic and socioeconomic features available in the dataset. Random Forest was selected because it is a robust ensemble learning technique that can capture complex, non-linear relationships while remaining relatively resistant to overfitting.
 
