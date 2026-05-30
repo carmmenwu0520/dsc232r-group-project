@@ -1,8 +1,8 @@
 # Methods
 
-***Data Exploration**
+##Data Exploration##
 
-  ### Number of Columns and Rows
+  *Number of Columns and Rows*
 
  ```python
 row_count = df.count()
