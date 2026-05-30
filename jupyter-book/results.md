@@ -9,15 +9,12 @@ Include: accuracy metrics, confusion matrices, explained variance plots, cluster
 ### Data Plots from phase Data Exploration
 
 ### Plot-1 Income vs Education
-
 <img width="597" height="459" alt="Screenshot 2026-05-30 at 4 22 12 PM" src="https://github.com/user-attachments/assets/a65312ed-97d5-4dba-9f98-0c9b0b007439" />
 
 ### Plot2  Income trend over Time
-
 <img width="616" height="452" alt="Screenshot 2026-05-30 at 4 26 19 PM" src="https://github.com/user-attachments/assets/63dc4a48-280d-4f81-bb92-5bcb3dacd600" />
 
 ### Plot3 Income by state- Top 10 state with abg income
-
 <img width="599" height="457" alt="Screenshot 2026-05-30 at 4 27 43 PM" src="https://github.com/user-attachments/assets/fe39cd5b-59a7-4e82-bfd3-aa2ee36eb20a" />
 
 
