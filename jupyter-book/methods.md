@@ -217,9 +217,6 @@ df = df.drop("STATE_INDEX", "SEX_INDEX", "RACE_INDEX")
 # For inherently ranked attributes (EDUC), map ordinals using adjusted clean indices
 df = df.withColumn("EDUC", F.when(F.col("EDUC") >= 10, F.col("EDUC") - 1).otherwise(F.col("EDUC")))
 
-```
-
-
 ## For feature engineering:
 # We created cleaned income features (for example, excluding special-code values from numeric summaries)
 # Exclude code-scheme defined missing markers (9999999.0) from raw total income
@@ -241,6 +238,8 @@ income_averages_map = income_averages.select("YEAR", "INCTOT_AVG").rdd.collectAs
 
 for key, val in income_averages_map.items():
     df = df.withColumn("INCTOT", F.when((F.col("YEAR") == key) & (F.col("INCTOT").isNull()), val).otherwise(F.col("INCTOT")))
+
+```
 
 ### 4. Spark Operations Planned for Preprocessing
 
