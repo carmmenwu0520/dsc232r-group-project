@@ -182,7 +182,8 @@ To investigate the impact of model complexity, two versions of Random Forest wer
 
 
 
-## Random Forest Classifier (Multiclass Education Prediction)->We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
+## Random Forest Classifier (Multiclass Education Prediction)-
+We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
  Classification performance was evaluated using:
  1-Accuracy: The proportion of correctly classified observations.
  2-F1 Score: The harmonic mean of precision and recall, providing a balanced measure of classification performance.
@@ -218,6 +219,44 @@ Regression Results
 | RF `numTrees=30` `maxDepth=12` | train | 31565.51 | 15258.63 | 0.254113 |
 | RF `numTrees=30` `maxDepth=12` | val | 31587.00 | 15260.15 | 0.254201 |
 | RF `numTrees=30` `maxDepth=12` | test | 31559.95 | 15249.53 | 0.254087 |
+
+
+## Step1-Supervised Feature Assembly & Dataset Splitting
+
+For Model 1, the target parameter was defined by mapping the educational column (EDUC) to a double precision label layout. Key independent features capturing scaled financial metrics, z-score scaled demographics, and one-hot encoded vector spaces (REALINCTOT_Z, AGE_Z, STATE_OH, SEX_OH, and RACE_OH) were isolated and combined into a singular unified sparse matrix via PySpark's VectorAssembler.Once assembled, the rows were distributed randomly into distinct processing subsets for training (70%), validation (15%), and testing (15%) splits leveraging a constant evaluation seed.
+
+```python
+
+
+# Format target label structure and select independent components
+ml_df = df.select(F.col("EDUC").cast("double").alias("label"), "REALINCTOT_Z", "AGE_Z", "STATE_OH", "SEX_OH", "RACE_OH", "EDUCNAME")
+
+# Structural consolidation of dimensions into a unified dense features column
+assembler = VectorAssembler(inputCols=["REALINCTOT_Z", "AGE_Z", "STATE_OH", "SEX_OH", "RACE_OH"], outputCol="features")
+ml_df = assembler.transform(ml_df)
+
+# Perform distributed random splits across fixed random boundaries
+train_df, val_df, test_df = ml_df.randomSplit([0.70, 0.15, 0.15], seed=SEED)
+
+```
+## Step2 Baseline Random Forest Classifier Training
+A distributed RandomForestClassifier was initialized to serve as the initial pipeline baseline model. The model configuration constructed 20 distinct decision trees (numTrees=20) allowed to branch out to a localized vertical deep bound limit of 10 (maxDepth=10). This configuration provides a stable baseline for evaluating multiclass prediction capability across the transformed feature matrices.
+
+```python
+# Initialize and train the baseline Random Forest Classifier
+rf = RandomForestClassifier(labelCol="label", featuresCol="features", predictionCol="prediction", numTrees=20, maxDepth=10, seed=SEED)
+model_baseline = rf.fit(train_df)
+```
+## Step3 Hyperparameter Optimization
+To optimize classification accuracy and control tree variance, a second, deeper model variant was initialized. The random forest configuration was manually optimized by scaling the ensemble size up to 30 decision trees (numTrees=30) and adjusting the information threshold boundaries down to an expanded structural maximum depth of 12 (maxDepth=12). This structural expansion allows individual nodes to form more precise non-linear decision splits.
+
+```python
+# Scale model hyperparameters to improve multi-class boundary limits
+rf2 = RandomForestClassifier(labelCol="label", featuresCol="features", predictionCol="prediction", numTrees=30, maxDepth=12, seed=SEED)
+model_rf_hp = rf2.fit(train_df)
+```
+
+
 
     
 - **Model 2** (PCA/SVD + clustering or supervised)
@@ -265,6 +304,57 @@ df = df.withColumn("REALINCTOT", F.col("INCTOT") * F.col("CPI99"))
 df = df.withColumn("REALINCTOT_LOG", F.signum(F.col("REALINCTOT")) * F.log1p(F.abs(F.col("REALINCTOT"))))
 
 ```
+
+## Dimensionality Reduction via PCA
+All processed numerical columns and high-dimensional one-hot encoded arrays were flattened into a single dense vector structure via a VectorAssembler. A Principal Component Analysis (PCA) estimator was fitted on the training split to identify the orthogonal axes capturing the highest variance.An initial evaluation up to $k=10$ components revealed that the first component explained 30.68% of the total variance, the second explained 14.00%, and the third explained 7.31%. Following the elbow method on the generated scree plot, the feature space was reduced to the top 3 principal components, capturing a cumulative variance of 51.99%.
+
+```python
+
+
+# Combine features into a single vector column
+assembler = VectorAssembler(inputCols=["EDUC_MM", "AGE_Z", "STATE_OH", "SEX_OH", "RACE_OH", "EMPSTAT_MM", "CITIZEN_MM", "MARRINYR_MM", "WKSWORK1_MM", "HISPAN_OH"], outputCol="features")
+ml_df = assembler.transform(ml_df)
+
+# Perform train/validation/test split and fit PCA
+train_df, val_df, test_df = ml_df.randomSplit([0.70, 0.15, 0.15], seed=42)
+pca = PCA(k=10, inputCol="features", outputCol="pca_features")
+model = pca.fit(train_df)
+
+```
+
+## Baseline Model Training (Random Forest)
+Using the compressed feature representations obtained from the 3 principal components, a RandomForestRegressor was established as the baseline supervisor to predict the real income target. The model was configured as an ensemble of 30 independent decision trees (numTrees=30), allowing each tree to grow to a maximum depth of 12 (maxDepth=12) to map non-linear relationships within the low-dimensional PCA projections.
+
+```python
+# Isolate the top 3 principal components from the PCA vector output
+train_final_df = train_final_df.withColumn("pca_features_3", array_to_vector(F.slice(vector_to_array("pca_features"), 1, 3)))
+
+# Initialize and train the Random Forest Regressor
+rf = RandomForestRegressor(labelCol="label", featuresCol="pca_features_3", predictionCol="prediction", numTrees=30, maxDepth=12, seed=42)
+model_baseline = rf.fit(train_final_df)
+
+```
+## Performance Evaluation & Error Diagnosis
+The model's generalizability was measured systematically across the train, validation, and test subsets using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Coefficient of Determination ($R^2$).The baseline model delivered a highly stable $R^2$ score of approximately 0.235 across all splits. While the consistent performance indicates high generalizability without overfitting, the restricted accuracy metrics reflect the loss of high-frequency information resulting from the aggressive dimensional compression down to 3 components. To assist future optimization, an absolute error tracking column was added to isolate and diagnose extreme prediction outliers.
+
+```python
+
+# Set up standard regression evaluators
+ev_rmse = RegressionEvaluator(labelCol="label", predictionCol="prediction", metricName="rmse")
+ev_r2 = RegressionEvaluator(labelCol="label", predictionCol="prediction", metricName="r2")
+
+pred_test = model_baseline.transform(test_final_df)
+print("Test Results -> RMSE:", ev_rmse.evaluate(pred_test), "| R2:", ev_r2.evaluate(pred_test))
+
+# Calculate absolute residual error to isolate poor predictions
+pred_test = pred_test.withColumn("error", F.abs(F.col("label") - F.col("prediction")))
+worst_outliers = pred_test.orderBy(F.col("error").desc()).select(["label", "prediction", "error"]).show(1)
+
+```
+
+
+
+
 
 *Note: A methods section does not include "why"—the reasoning goes in the Discussion section. This is just a summary of your methods.*
 
