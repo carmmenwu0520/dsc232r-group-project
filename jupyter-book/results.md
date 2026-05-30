@@ -30,6 +30,12 @@ Include: accuracy metrics, confusion matrices, explained variance plots, cluster
 <img width="585" height="453" alt="Screenshot 2026-05-30 at 4 42 03 PM" src="https://github.com/user-attachments/assets/585c3b0a-83de-4a39-b4ee-f4f8390b59e0" />
 
 
+### Plot6 Education vs Income by Gender
+
+<img width="602" height="446" alt="Screenshot 2026-05-30 at 4 58 01 PM" src="https://github.com/user-attachments/assets/e290d7c7-8c9f-46ce-9b4e-5517804c3886" />
+
+
+
 
 
 
