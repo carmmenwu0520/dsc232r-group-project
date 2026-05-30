@@ -269,7 +269,7 @@ Outcome
 The preprocessing stage produced a cleaned and transformed dataset suitable for modelling , visualization, dimensionality reduction, and machine learning. Missing values were handled appropriately, categorical variables were encoded, numerical variables were standardized, inflation-adjusted income measures were created, and additional engineered features were generated to improve analytical usefulness.
 
 
-# **Model-1( first distributed model)
+# ** Model-1( first distributed model)
 
 As an initial modeling approach, Random Forest algorithms were applied to both classification and regression tasks to establish strong baseline models and evaluate the predictive power of the demographic and socioeconomic features available in the dataset. Random Forest was selected because it is a robust ensemble learning technique that can capture complex, non-linear relationships while remaining relatively resistant to overfitting.
 
