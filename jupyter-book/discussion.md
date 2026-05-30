@@ -23,21 +23,22 @@ Answer the following:
 
 - What are potential future improvements or next models?
   
- Ans:-Feature engineering:
- 1) Retain more PCA components. The elbow method selected 3–4, but given that cumulative explained variance is only ~52–65%, we could reasonably try 6–8 components and observe whether          validation metrics improve meaningfully.
- 2)Consider alternative dimensionality reduction techniques like truncated SVD or UMAP, which may capture non-linear structure that PCA misses.
+  Ans:
+  - Feature engineering:
+  - Retain more PCA components. The elbow method selected 3–4, but given that cumulative explained variance is only ~52–65%, we could reasonably try 6–8 components and observe whether           validation metrics improve meaningfully.
+  - Consider alternative dimensionality reduction techniques like truncated SVD or UMAP, which may capture non-linear structure that PCA misses.
 
- -Model improvements:
- 1)Gradient Boosted Trees (GBT) in PySpark tend to outperform Random Forests on tabular data, especially for regression tasks like income prediction where outliers and skew are present.
- 2)Hyperparameter tuning via CrossValidator or TrainValidationSplit on numTrees, maxDepth, and minInstancesPerNode — the current model uses fixed hyperparameters.
- 3)For the classification task, experimenting with Gradient Boosted Classifier or a Multilayer Perceptron could improve F1 on minority education categories.
+ - Model improvements:
+ - Gradient Boosted Trees (GBT) in PySpark tend to outperform Random Forests on tabular data, especially for regression tasks like income prediction where outliers and skew are present.
+ - Hyperparameter tuning via CrossValidator or TrainValidationSplit on numTrees, maxDepth, and minInstancesPerNode — the current model uses fixed hyperparameters
+ - For the classification task, experimenting with Gradient Boosted Classifier or a Multilayer Perceptron could improve F1 on minority education categories.
  
- -Data improvements:
- 1) Re-introduce the OCC1990 occupation column with hierarchical grouping (e.g., collapsing ~400 occupations into ~15 broad sectors), which is likely one of the strongest predictors of         income and education.
- 2) Include interaction or polynomial features on AGE (age-squared is a classic predictor of income in economics/labor literature).
-
--Target variable:
-The income regressor predicts raw REALINCTOT, which still has a heavy right skew even after log-transforming REALINCTOT_LOG for the features. Consider predicting REALINCTOT_LOG as the target (and inverting at evaluation time) to reduce the influence of extreme outliers on RMSE.
+ - Data improvements:
+ - Re-introduce the OCC1990 occupation column with hierarchical grouping (e.g., collapsing ~400 occupations into ~15 broad sectors), which is likely one of the strongest predictors of         income and education.
+ - Include interaction or polynomial features on AGE (age-squared is a classic predictor of income in economics/labor literature).
+   
+ - Target variable:
+  The income regressor predicts raw REALINCTOT, which still has a heavy right skew even after log-transforming REALINCTOT_LOG for the features. Consider predicting REALINCTOT_LOG as the       target (and inverting at evaluation time) to reduce the influence of extreme outliers on RMSE.
 
 - How does dimensionality reduction affect your results compared to the full feature set?
   The effects are clearly negative in terms of raw predictive power, and the notebook acknowledges this directly.
