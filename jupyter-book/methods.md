@@ -171,6 +171,77 @@ For feature engineering:
 - We  mapped state codes (STATEFIP values such as 1-56, including 1-50 for U.S. states) to readable state names/labels for geographic visualization (e.g., choropleth maps)
 - We created an inflation-adjusted income feature (for example, `INCTOT_adjusted`) by joining annual inflation/CPI values by `YEAR` and scaling `INCTOT` into comparable dollars
 
+ ```python
+# ### 3. Transformations
+
+## For numerical features like AGE and INCTOT:
+# We applied scaling (normalization or standardization)
+from pyspark.ml.feature import StandardScaler, VectorAssembler
+
+# Assemble continuous feature columns into temporary vector structures
+assembler_inc = VectorAssembler(inputCols=["REALINCTOT"], outputCol="REALINCTOT_VEC")
+df = assembler_inc.transform(df)
+
+# Apply Z-score standardization to center the mean at 0 and scale variance to 1
+scaler_inc = StandardScaler(inputCol="REALINCTOT_VEC", outputCol="REALINCTOT_Z", withStd=True, withMean=True)
+df = scaler_inc.fit(df).transform(df)
+
+assembler_age = VectorAssembler(inputCols=["AGE"], outputCol="AGE_VEC")
+df = assembler_age.transform(df)
+
+scaler_age = StandardScaler(inputCol="AGE_VEC", outputCol="AGE_Z", withStd=True, withMean=True)
+df = scaler_age.fit(df).transform(df)
+
+# Drop temporary intermediate vectors
+df = df.drop("AGE_VEC", "REALINCTOT_VEC")
+
+
+## For categorical features like SEX, RACE, EDUC, and STATEFIP:
+# We encoded categories into model-ready numeric representations (for example, index encoding and one-hot style vectors when appropriate)
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import OneHotEncoder, StringIndexer
+
+# Build indexer and encoder pipelines for unranked categorical columns
+pairs = [("STATENAME", "STATE_INDEX", "STATE_OH"), 
+         ("SEXNAME", "SEX_INDEX", "SEX_OH"), 
+         ("RACENAME", "RACE_INDEX", "RACE_OH")]
+steps = []
+for in_col, mid_col, out_col in pairs:
+    steps.append(StringIndexer(inputCol=in_col, outputCol=mid_col))
+    steps.append(OneHotEncoder(inputCol=mid_col, outputCol=out_col, dropLast=False))
+    
+pipeline = Pipeline(stages=steps)
+df = pipeline.fit(df).transform(df)
+df = df.drop("STATE_INDEX", "SEX_INDEX", "RACE_INDEX")
+
+# For inherently ranked attributes (EDUC), map ordinals using adjusted clean indices
+df = df.withColumn("EDUC", F.when(F.col("EDUC") >= 10, F.col("EDUC") - 1).otherwise(F.col("EDUC")))
+
+```
+
+
+## For feature engineering:
+# We created cleaned income features (for example, excluding special-code values from numeric summaries)
+# Exclude code-scheme defined missing markers (9999999.0) from raw total income
+df = df.replace(9999999.0, None, subset=["INCTOT"])
+
+# Adjust total nominal income for inflation to make values comparable across years
+df = df.withColumn("REALINCTOT", F.col("INCTOT") * F.col("CPI99"))
+df = df.drop("CPI99")
+
+
+# We prepared derived grouping features for year and geography to support regional/time-based modeling
+# Map numeric IPUMS geographic and demographic codes to descriptive strings
+state_mapping = [F.lit(x) for item in statefip.items() for x in item]
+df = df.withColumn("STATENAME", F.create_map(state_mapping)[F.col("STATEFIP")])
+
+# Calculate yearly inflation-adjusted baselines and fill missing records conditionally by year group
+income_averages = df.select("YEAR", "INCTOT").groupBy("YEAR").agg(F.avg("INCTOT").alias("INCTOT_AVG"))
+income_averages_map = income_averages.select("YEAR", "INCTOT_AVG").rdd.collectAsMap()
+
+for key, val in income_averages_map.items():
+    df = df.withColumn("INCTOT", F.when((F.col("YEAR") == key) & (F.col("INCTOT").isNull()), val).otherwise(F.col("INCTOT")))
+
 ### 4. Spark Operations Planned for Preprocessing
 
 Spark Operations Used
