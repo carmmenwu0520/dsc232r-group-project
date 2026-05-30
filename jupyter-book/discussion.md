@@ -52,5 +52,5 @@ Your feature matrix is a mix of sparse one-hot encodings (STATE_OH has ~50 colum
 
 <img width="747" height="338" alt="Screenshot 2026-05-30 at 4 06 56 PM" src="https://github.com/user-attachments/assets/74166e5f-d553-4d04-bad2-56fd7953b454" />
 
-Bottom line: Dimensionality reduction via PCA hurt predictive accuracy in exchange for a simpler, faster-to-train model. Given that the original dataset has many one-hot-encoded sparse features (especially STATE_OH), PCA is not the ideal choice for this data structure.
+Bottom line: Dimensionality reduction via PCA hurt predictive accuracy in exchange for a simpler, faster-to-train model. Given that the original dataset has many one-hot-encoded sparse features, PCA is not the ideal choice for this data structure.
 
