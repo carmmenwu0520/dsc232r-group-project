@@ -282,13 +282,11 @@ Outcome
 The preprocessing stage produced a cleaned and transformed dataset suitable for modelling , visualization, dimensionality reduction, and machine learning. Missing values were handled appropriately, categorical variables were encoded, numerical variables were standardized, inflation-adjusted income measures were created, and additional engineered features were generated to improve analytical usefulness.
 
 
-# ** Model-1( first distributed model)
+# Model-1( first distributed model)
 
 As an initial modeling approach, Random Forest algorithms were applied to both classification and regression tasks to establish strong baseline models and evaluate the predictive power of the demographic and socioeconomic features available in the dataset. Random Forest was selected because it is a robust ensemble learning technique that can capture complex, non-linear relationships while remaining relatively resistant to overfitting.
 
 To investigate the impact of model complexity, two versions of Random Forest were trained for each task. The first model used numTrees=20 and maxDepth=10, while a second model with tuned hyperparameters used numTrees=30 and maxDepth=12. Performance was evaluated on training, validation, and test datasets.
-
-
 
 ## Random Forest Classifier (Multiclass Education Prediction)-
 We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
@@ -378,7 +376,10 @@ pred = model_rf_hp.transform(test_df)
 print("test_rf30_d12 Results -> Accuracy:", ev_acc.evaluate(pred), "| F1:", ev_f1.evaluate(pred))
 ```
 
-## Step5 Baseline Random Forest Regressor Training
+ ### Random Forest Regressor-->
+ We used a Random Forest Regressor to predict continuous income values (REALINCTOT) using demographic and socioeconomic variables such as age, education, sex, race, and state information. Random Forest Regression is an ensemble learning method that builds multiple decision trees and averages their predictions
+
+### Baseline Random Forest Regressor Training
 A distributed RandomForestRegressor pipeline was established to construct an initial ensemble baseline model for real income projection. The baseline pipeline was configured with 20 distinct decision trees (numTrees=20) capped at an individual maximum depth limit of 10 (maxDepth=10). This multi-tree ensemble forms the foundation for mapping continuous target variances across the integrated feature space.
 
 ```python
@@ -386,7 +387,7 @@ A distributed RandomForestRegressor pipeline was established to construct an ini
 rf = RandomForestRegressor(labelCol="label", featuresCol="features", predictionCol="prediction", numTrees=20, maxDepth=10, seed=42)
 model_baseline = rf.fit(train_df)
 ```
-## Step5 Hyperparameter Optimization
+### Hyperparameter Optimization
 To capture deep, non-linear feature interactions and optimize residual errors, a second regression model variant was initialized. The parameters were scaled upwards to deploy 30 independent decision trees (numTrees=30) while simultaneously expanding the depth limit per tree down to 12 structural layers (maxDepth=12). This structural optimization allows the regression leaves to isolate more precise regional income variations.
 
 ```python
@@ -394,7 +395,7 @@ To capture deep, non-linear feature interactions and optimize residual errors, a
 rf2 = RandomForestRegressor(labelCol="label", featuresCol="features", predictionCol="prediction", numTrees=30, maxDepth=12, seed=42)
 model_rf_hp = rf2.fit(train_df)
 ```
-## Step6 Distributed Continuous Regression Evaluation Matrix
+### Distributed Continuous Regression Evaluation Matrix
 The accuracy of the model projections was systematically measured across the train, validation, and test subsets using a matrix of typical continuous evaluation metrics: Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Coefficient of Determination ($R^2$).The hyperparameter-optimized architecture delivered steady, consistent optimization gains over the baseline run across all partitions, achieving an out-of-sample test $R^2$ score of approximately 0.254, confirming stable generalization characteristics without overfitting.
 
 ```python
