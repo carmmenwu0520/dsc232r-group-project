@@ -154,6 +154,19 @@ EDUC
 STATEFIP
 Category frequencies were calculated using Spark aggregation functions. The results were used to assess whether additional balancing techniques would be required during model development.
 
+ ```python
+# Designate placeholder values as missing flags to balance feature entries
+df = df.replace(0, None, subset=["EMPSTAT", "CITIZEN", "MARRINYR"])
+
+# Impute categorical variables with the mode
+df = df.fillna(1, subset=["EMPSTAT", "MARRINYR"])
+df = df.fillna(2, subset=["CITIZEN"])
+
+# Impute continuous variables with the column mean
+mean_val = df.select(F.mean("WKSWORK1")).collect()[0][0]
+df = df.fillna(mean_val, subset=["WKSWORK1"])
+```
+
 ### 3. Transformations
 
 For numerical features like AGE and INCTOT:
