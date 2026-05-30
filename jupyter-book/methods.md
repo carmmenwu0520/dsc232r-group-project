@@ -6,12 +6,269 @@ This section includes exploration results, preprocessing steps, and models chose
 
 - **Data Exploration**
 - **Preprocessing** (using Spark)
-- **Model 1** (your first distributed model)
+  ### Number of Columns and Rows
+
+| Metric | Value |
+|---|---:|
+| Number of Rows | 67,125,780 |
+| Number of Columns | 238 |
+
+### Target Columns
+
+Our columns of main interest are "YEAR", "STATEFIP", "SEX", "AGE", "RACE", "EDUC", and "INCTOT". EDUC and INCTOT are the major relavant columns to directly answer our abstract. YEAR will provide chronological information, STATEFIP will provide spatial information, and SEX, AGE, and RACE can provide further data partitioning to reveal trends and patterns on sex, age, and race.
+The full dataset contains 238 columns, and complete descriptors for all variables are available in both [`usa_00001.xml`](./usa_00001.xml) and the [IPUMS variable documentation website](https://usa.ipums.org/usa-action/variables/group).
+
+- YEAR (Numerical): The year the data was collected.
+- STATEFIP (Categorical): The US state the data was collected using the FIPS (Federal Information Processing Standards) coding scheme.
+- SEX (Categorical): Whether the person was male or female
+- AGE (Numerical): The person's age in years.
+- RACE (Categorical): The person's race.
+- EDUC (Categorical): The person's educational attainment.
+- INCTOT (Numerical): The person's pre-tax total personal income (or loss).
+
+All categorical variables have some numeric coding scheme which correspond with qualitative categories. These coding schemes and descriptions are found on the [IPUMS website](https://usa.ipums.org/usa-action/variables/group).
+
+### Descriptive statistics for Numeric data
+
+| summary | YEAR | AGE | INCTOT |
+|---|---:|---:|---:|
+| count | 67,125,780 | 67,125,780 | 67,125,780 |
+| mean | 2013.8564 | 40.7865 | 1,774,229.3693 |
+| stddev | 6.3780 | 23.5751 | 3,777,923.4429 |
+| min | 2001.0 | 0.0 | -19998.0 |
+| max | 2024.0 | 97.0 | 9999999.0 |
+
+Our dataset captures survey results between 2001 and 2024. Our age range is between 0 and 97 years old with an average age of approximately 41 years old. Since the maximum age is 97, there are no missing data because the assigned code for missing data is 999. According to the IPUMS website, for our dataset which covers 2001-2024, there are special codes to indicate certain circumstances for the `INCTOT` column:
+
+- 0000000 = None
+- 0000001 = $1 or break even (2000, 2005-onward ACS and PRCS)
+- 9999999 = N/A
+- 9999998 = Unknown
+
+### Checking for Duplicates
+
+Due to the large size of the dataset, it's difficult to look for duplicate rows on all rows. Instead, we will rely on the PERNUM column which uniquely identifies a person. We will combine this with YEAR (since the same person can respond multiple times across years) to identify potential duplicates. Also, as advised by the IPUMS website: "When combined with SAMPLE and SERIAL, PERNUM uniquely identifies each person within the IPUMS." As a safety precaution, we will use all 4 columns to uniquely identify a person's survey response in order to identify duplicates.
+
+| Metric | Value |
+|---|---:|
+| Unique (`YEAR`,`PERNUM`,`SAMPLE`,`SERIAL`) | 67,125,780 |
+| Duplicates | 0 |
+
+There are no duplicates.
+
+### Counting Nulls
+
+| Column | Null count |
+|---|---:|
+| YEAR | 0 |
+| STATEFIP | 0 |
+| SEX | 0 |
+| AGE | 0 |
+| RACE | 0 |
+| EDUC | 0 |
+| INCTOT | 0 |
+
+We can see that there are no null values in these columns. However, it remains to be seen if the unavailable data defined by the coding schemes (e.g. 99 for EDUC column) are present in the data. This will be known in the next few sections.
+
+### Special-code check for `INCTOT`
+
+| INCTOT value | count |
+|---:|---:|
+| 0.0 | 6,773,579 |
+| -19998.0 | 196 |
+| 1.0 | 6,266 |
+| 9999999.0 | 11,690,872 |
+
+There are multiple instances of 9999999, indicating missing data. There are no instances of 9999998, and there are a significant number of instances of 0. This is likely a nice round number that survey participants would use to indicate that they had no income that year. To a lesser degree, the same could be said about the number of instaces of 1. The relatively low count of -19998 instances indicate that this is simply a lower bound.
+
+If we remove the instances of 9999999, the income distribution is:
+
+| summary | INCTOT |
+|---|---:|
+| count | 55,434,908 |
+| mean | 39,466.5038 |
+| stddev | 59,723.0848 |
+| min | -19998.0 |
+| max | 1,945,000.0 |
+
+The income distribution appears to be between -19998 and 1945000 dollars with a mean income of 39466.50 dollars.
+
+### Checking for code-defined missing data in Categorical Data
+There are code scheme defined codes for missing data in the EDUC (code 99), SEX (code 9), and STATEFIP (code 99) columns. We checked if there are any instances of this form of missing data using `.groupBy()` and `.count()`, but the tables in [`data-exploration.ipynb`](./data-exploration.ipynb) reveal that these codes were not used. All data points of interest are present within these columns.
+
+
+
+### Preprocessing Plan 
+
+Before analysis and modeling, the dataset was cleaned and transformed to improve data quality and prepare the data for machine learning and visualization tasks. Because the dataset contained approximately 67 million records and 238 variables, all preprocessing operations were performed using Spark.
+
+## 1. Handling Missing Values
+
+# For numerical variables such as AGE and INCTOT:
+
+Special missing-value codes were identified and replaced with null values.
+The proportion of missing values was examined for each variable.
+Missing values were imputed using appropriate summary statistics when necessary.
+Variables with excessive missingness were evaluated before further analysis.
+
+# For categorical variables such as SEX, RACE, EDUC, and MARST:
+
+Invalid or unknown category codes were identified and converted to null values.
+Missing categories were retained or imputed depending on the analytical requirements.
+
+## 2. Handling Data Imbalance
+
+The distributions of key categorical variables were evaluated to determine the presence of class imbalance.
+
+Variables examined included:
+
+SEX
+RACE
+EDUC
+STATEFIP
+
+Category frequencies were calculated using Spark aggregation functions. The results were used to assess whether additional balancing techniques would be required during model development.
+
+## 3. Transformations
+
+For numerical features like AGE and INCTOT:
+
+- We applied scaling (normalization or standardization)
+
+For categorical features like SEX, RACE, EDUC, and STATEFIP:
+
+- We  encoded categories into model-ready numeric representations (for example, index encoding and one-hot style vectors when appropriate)
+
+For feature engineering:
+
+- We  created cleaned income features (for example, excluding special-code values from numeric summaries)
+- We prepared derived grouping features for year and geography to support regional/time-based modeling
+- We  mapped state codes (STATEFIP values such as 1-56, including 1-50 for U.S. states) to readable state names/labels for geographic visualization (e.g., choropleth maps)
+- We created an inflation-adjusted income feature (for example, `INCTOT_adjusted`) by joining annual inflation/CPI values by `YEAR` and scaling `INCTOT` into comparable dollars
+
+### 4. Spark Operations Planned for Preprocessing
+
+Spark Operations Used
+
+The preprocessing pipeline was implemented using Spark DataFrame operations and Spark ML transformers.
+
+Key operations included:
+
+withColumn()
+when()
+otherwise()
+filter()
+drop()
+na.fill()
+na.drop()
+groupBy().count()
+agg()
+join()
+StringIndexer
+OneHotEncoder
+VectorAssembler
+StandardScaler
+PCA
+Outcome
+
+The preprocessing stage produced a cleaned and transformed dataset suitable for modelling , visualization, dimensionality reduction, and machine learning. Missing values were handled appropriately, categorical variables were encoded, numerical variables were standardized, inflation-adjusted income measures were created, and additional engineered features were generated to improve analytical usefulness.
+
+
+### **Model 1### ( first distributed model)
+
+As an initial modeling approach, Random Forest algorithms were applied to both classification and regression tasks to establish strong baseline models and evaluate the predictive power of the demographic and socioeconomic features available in the dataset. Random Forest was selected because it is a robust ensemble learning technique that can capture complex, non-linear relationships while remaining relatively resistant to overfitting.
+
+To investigate the impact of model complexity, two versions of Random Forest were trained for each task. The first model used numTrees=20 and maxDepth=10, while a second model with tuned hyperparameters used numTrees=30 and maxDepth=12. Performance was evaluated on training, validation, and test datasets.
+
+
+
+## Random Forest Classifier (Multiclass Education Prediction)->We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
+ Classification performance was evaluated using:
+ 1-Accuracy: The proportion of correctly classified observations.
+ 2-F1 Score: The harmonic mean of precision and recall, providing a balanced measure of classification performance.
+ 3- Weighted Precision: Precision averaged across all classes while accounting for class frequencies.
+
+ Classification Results
+
+
+ | model | split                        | accuracy | f1 | weightedPrecision |
+|:--|:--|--:|--:|--:|
+| RF `numTrees=20` `maxDepth=10` | train | 0.446404 | 0.333050 | 0.414931 |
+| RF `numTrees=20` `maxDepth=10` | val | 0.446472 | 0.333084 | 0.415042 |
+| RF `numTrees=20` `maxDepth=10` | test | 0.446635 | 0.333245 | 0.414820 |
+| RF `numTrees=30` `maxDepth=12` | train | 0.478052 | 0.389883 | 0.434884 |
+| RF `numTrees=30` `maxDepth=12` | val | 0.478075 | 0.389845 | 0.434680 |
+| RF `numTrees=30` `maxDepth=12` | test | 0.478180 | 0.389950 | 0.435532 |
+
+ ## Random Forest Regressor-->We used a Random Forest Regressor to predict continuous income values (REALINCTOT) using demographic and socioeconomic variables such as age, education, sex, race, and state information. Random Forest Regression is an ensemble learning method that builds multiple decision trees and averages their predictions
+
+ Regression performance was evaluated using:
+
+  1-Root Mean Squared Error (RMSE): Measures the average prediction error while giving greater weight to larger errors.
+  2-Mean Absolute Error (MAE): Measures the average absolute difference between predicted and actual income values.
+  3-R² (Coefficient of Determination): Represents the proportion of variance in income explained by the model.
+
+Regression Results
+
+| model | split                          | rmse    | mae |     | r2 |
+|:--|:--|--:|--:|--:|
+| RF `numTrees=20` `maxDepth=10` | train | 31627.08 | 15340.43 | 0.251201 |
+| RF `numTrees=20` `maxDepth=10` | val | 31647.34 | 15340.85 | 0.251349 |
+| RF `numTrees=20` `maxDepth=10` | test | 31620.07 | 15330.54 | 0.251243 |
+| RF `numTrees=30` `maxDepth=12` | train | 31565.51 | 15258.63 | 0.254113 |
+| RF `numTrees=30` `maxDepth=12` | val | 31587.00 | 15260.15 | 0.254201 |
+| RF `numTrees=30` `maxDepth=12` | test | 31559.95 | 15249.53 | 0.254087 |
+
+    
 - **Model 2** (PCA/SVD + clustering or supervised)
 
 Include code blocks using markdown: `` ```python ... ``` ``
+## Feature Expansion & Missing Data Imputation
+Because Model 2 leverages Dimensionality Reduction (PCA), the feature space was expanded by extracting additional categorical columns from the original dataset (EMPSTAT, CITIZEN, WKSWORK1, MARRINYR, and HISPAN). This allows PCA to map a richer subset of features.
+Before transforming the space, placeholder values representing missing flags (such as 0 for employment and marriage variables) were explicitly set to None. Missing entries in categorical attributes were imputed using their statistical mode (e.g., 1 for employment status, 2 for citizenship status), while continuous columns (WKSWORK1) were filled using their statistical mean.
+
+
+```python
+# Designate placeholder values as missing flags
+df = df.replace(0, None, subset=["EMPSTAT", "CITIZEN", "MARRINYR"])
+
+# Impute categorical variables with the mode
+df = df.fillna(1, subset=["EMPSTAT", "MARRINYR"])
+df = df.fillna(2, subset=["CITIZEN"])
+
+# Impute continuous variables with the column mean
+mean_val = df.select(F.mean("WKSWORK1")).collect()[0][0]
+df = df.fillna(mean_val, subset=["WKSWORK1"])
+```
+
+## Categorical Encoding & Scaled Transformations
+To prepare the dataset for PCA, numerical tracking attributes with disparate ranges were normalized using a MinMaxScaler. Ordinal transformations were applied directly to inherently ranked variables like education levels (EDUC). For unranked geographical and demographic indices (STATEFIP, SEX, RACE, and HISPAN), a processing pipeline involving StringIndexer and OneHotEncoder was utilized to prevent the model from inferring a false numerical hierarchy.
+Additionally, because the target variable (REALINCTOT) suffered from a severe rightward skew, a signed logarithmic transformation (REALINCTOT_LOG) was implemented prior to calculating its final Z-score normalization.
+
+```python
+
+
+# Build the encoding pipeline for unranked categorical variables
+pairs = [("STATENAME", "STATE_INDEX", "STATE_OH"), 
+         ("SEXNAME", "SEX_INDEX", "SEX_OH"), 
+         ("RACENAME", "RACE_INDEX", "RACE_OH")]
+steps = []
+for in_col, mid_col, out_col in pairs:
+    steps.append(StringIndexer(inputCol=in_col, outputCol=mid_col))
+    steps.append(OneHotEncoder(inputCol=mid_col, outputCol=out_col, dropLast=False))
+    
+pipeline = Pipeline(stages=steps)
+df = pipeline.fit(df).transform(df)
+
+# Target Transformation: Signed Log application before Scaling
+df = df.withColumn("REALINCTOT", F.col("INCTOT") * F.col("CPI99"))
+df = df.withColumn("REALINCTOT_LOG", F.signum(F.col("REALINCTOT")) * F.log1p(F.abs(F.col("REALINCTOT"))))
+
+```
 
 *Note: A methods section does not include "why"—the reasoning goes in the Discussion section. This is just a summary of your methods.*
+
+
 
 ## Notebooks
 
