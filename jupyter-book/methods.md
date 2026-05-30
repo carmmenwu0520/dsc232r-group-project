@@ -1,6 +1,6 @@
 # Methods
 
-##Data Exploration##
+## Data Exploration ##
 
   *Number of Columns and Rows*
 
@@ -16,7 +16,7 @@ print("Number of Columns:", column_count)
 | Number of Rows | 67,125,780 |
 | Number of Columns | 238 |
 
-### Target Columns
+#Target Columns
 
 Our columns of main interest are "YEAR", "STATEFIP", "SEX", "AGE", "RACE", "EDUC", and "INCTOT". EDUC and INCTOT are the major relavant columns to directly answer our abstract. YEAR will provide chronological information, STATEFIP will provide spatial information, and SEX, AGE, and RACE can provide further data partitioning to reveal trends and patterns on sex, age, and race.
 The full dataset contains 238 columns, and complete descriptors for all variables are available in both [`usa_00001.xml`](./usa_00001.xml) and the [IPUMS variable documentation website](https://usa.ipums.org/usa-action/variables/group).
@@ -31,7 +31,7 @@ The full dataset contains 238 columns, and complete descriptors for all variable
 
 All categorical variables have some numeric coding scheme which correspond with qualitative categories. These coding schemes and descriptions are found on the [IPUMS website](https://usa.ipums.org/usa-action/variables/group).
 
-### Descriptive statistics for Numeric data
+##Descriptive statistics for Numeric data
  ```python
 described = df.select(["YEAR", "AGE", "INCTOT"]).describe()
 ```
