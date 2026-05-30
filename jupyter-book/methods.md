@@ -288,51 +288,18 @@ As an initial modeling approach, Random Forest algorithms were applied to both c
 
 To investigate the impact of model complexity, two versions of Random Forest were trained for each task. The first model used numTrees=20 and maxDepth=10, while a second model with tuned hyperparameters used numTrees=30 and maxDepth=12. Performance was evaluated on training, validation, and test datasets.
 
-## Random Forest Classifier (Multiclass Education Prediction)-
+### Random Forest Classifier (Multiclass Education Prediction)-
 We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
  Classification performance was evaluated using:
  1-Accuracy: The proportion of correctly classified observations.
  2-F1 Score: The harmonic mean of precision and recall, providing a balanced measure of classification performance.
- 3- Weighted Precision: Precision averaged across all classes while accounting for class frequencies.
-
- Classification Results
+ 3- Weighted Precision: Precision averaged across all classes while accounting for class frequencies
 
 
- | model | split                        | accuracy | f1 | weightedPrecision |
-|:--|:--|--:|--:|--:|
-| RF `numTrees=20` `maxDepth=10` | train | 0.446404 | 0.333050 | 0.414931 |
-| RF `numTrees=20` `maxDepth=10` | val | 0.446472 | 0.333084 | 0.415042 |
-| RF `numTrees=20` `maxDepth=10` | test | 0.446635 | 0.333245 | 0.414820 |
-| RF `numTrees=30` `maxDepth=12` | train | 0.478052 | 0.389883 | 0.434884 |
-| RF `numTrees=30` `maxDepth=12` | val | 0.478075 | 0.389845 | 0.434680 |
-| RF `numTrees=30` `maxDepth=12` | test | 0.478180 | 0.389950 | 0.435532 |
-
- ## Random Forest Regressor-->We used a Random Forest Regressor to predict continuous income values (REALINCTOT) using demographic and socioeconomic variables such as age, education, sex, race, and state information. Random Forest Regression is an ensemble learning method that builds multiple decision trees and averages their predictions
-
- Regression performance was evaluated using:
-
-  1-Root Mean Squared Error (RMSE): Measures the average prediction error while giving greater weight to larger errors.
-  2-Mean Absolute Error (MAE): Measures the average absolute difference between predicted and actual income values.
-  3-R² (Coefficient of Determination): Represents the proportion of variance in income explained by the model.
-
-Regression Results
-
-| model | split                          | rmse    | mae |     | r2 |
-|:--|:--|--:|--:|--:|
-| RF `numTrees=20` `maxDepth=10` | train | 31627.08 | 15340.43 | 0.251201 |
-| RF `numTrees=20` `maxDepth=10` | val | 31647.34 | 15340.85 | 0.251349 |
-| RF `numTrees=20` `maxDepth=10` | test | 31620.07 | 15330.54 | 0.251243 |
-| RF `numTrees=30` `maxDepth=12` | train | 31565.51 | 15258.63 | 0.254113 |
-| RF `numTrees=30` `maxDepth=12` | val | 31587.00 | 15260.15 | 0.254201 |
-| RF `numTrees=30` `maxDepth=12` | test | 31559.95 | 15249.53 | 0.254087 |
-
-
-## Step1-Supervised Feature Assembly & Dataset Splitting
-
-For Model 1, the target parameter was defined by mapping the educational column (EDUC) to a double precision label layout. Key independent features capturing scaled financial metrics, z-score scaled demographics, and one-hot encoded vector spaces (REALINCTOT_Z, AGE_Z, STATE_OH, SEX_OH, and RACE_OH) were isolated and combined into a singular unified sparse matrix via PySpark's VectorAssembler.Once assembled, the rows were distributed randomly into distinct processing subsets for training (70%), validation (15%), and testing (15%) splits leveraging a constant evaluation seed.
+### Supervised Feature Assembly & Dataset Splitting for classification
+The target parameter was defined by mapping the educational column (EDUC) to a double precision label layout. Key independent features capturing scaled financial metrics, z-score scaled demographics, and one-hot encoded vector spaces (REALINCTOT_Z, AGE_Z, STATE_OH, SEX_OH, and RACE_OH) were isolated and combined into a singular unified sparse matrix via PySpark's VectorAssembler.Once assembled, the rows were distributed randomly into distinct processing subsets for training (70%), validation (15%), and testing (15%) splits leveraging a constant evaluation seed.
 
 ```python
-
 
 # Format target label structure and select independent components
 ml_df = df.select(F.col("EDUC").cast("double").alias("label"), "REALINCTOT_Z", "AGE_Z", "STATE_OH", "SEX_OH", "RACE_OH", "EDUCNAME")
@@ -345,7 +312,7 @@ ml_df = assembler.transform(ml_df)
 train_df, val_df, test_df = ml_df.randomSplit([0.70, 0.15, 0.15], seed=SEED)
 
 ```
-## Step2 Baseline Random Forest Classifier Training
+### Baseline Random Forest Classifier Training
 A distributed RandomForestClassifier was initialized to serve as the initial pipeline baseline model. The model configuration constructed 20 distinct decision trees (numTrees=20) allowed to branch out to a localized vertical deep bound limit of 10 (maxDepth=10). This configuration provides a stable baseline for evaluating multiclass prediction capability across the transformed feature matrices.
 
 ```python
@@ -353,7 +320,7 @@ A distributed RandomForestClassifier was initialized to serve as the initial pip
 rf = RandomForestClassifier(labelCol="label", featuresCol="features", predictionCol="prediction", numTrees=20, maxDepth=10, seed=SEED)
 model_baseline = rf.fit(train_df)
 ```
-## Step3 Hyperparameter Optimization
+### Hyperparameter Optimization
 To optimize classification accuracy and control tree variance, a second, deeper model variant was initialized. The random forest configuration was manually optimized by scaling the ensemble size up to 30 decision trees (numTrees=30) and adjusting the information threshold boundaries down to an expanded structural maximum depth of 12 (maxDepth=12). This structural expansion allows individual nodes to form more precise non-linear decision splits.
 
 ```python
@@ -362,7 +329,7 @@ rf2 = RandomForestClassifier(labelCol="label", featuresCol="features", predictio
 model_rf_hp = rf2.fit(train_df)
 ```
 
-## Step4 Distributed Multiclass Evaluation Matrix
+### Distributed Multiclass Evaluation Matrix
 Model performance was analyzed holistically by calculating metrics via PySpark’s MulticlassClassificationEvaluator. Performance bounds were verified uniformly against accuracy, Macro-F1 score, and weighted precision parameters across all partitions to monitor generalization characteristics and confirm the absence of overfitting.
 
 ```python
@@ -376,7 +343,7 @@ pred = model_rf_hp.transform(test_df)
 print("test_rf30_d12 Results -> Accuracy:", ev_acc.evaluate(pred), "| F1:", ev_f1.evaluate(pred))
 ```
 
- ### Random Forest Regressor-->
+ ### Random Forest Regressor
  We used a Random Forest Regressor to predict continuous income values (REALINCTOT) using demographic and socioeconomic variables such as age, education, sex, race, and state information. Random Forest Regression is an ensemble learning method that builds multiple decision trees and averages their predictions
 
 ### Baseline Random Forest Regressor Training
@@ -412,7 +379,7 @@ print("test_rf30_d12 Results -> RMSE:", ev_rmse.evaluate(pred), "| MAE:", ev_mae
 
 
     
-- **Model 2** (PCA/SVD + clustering or supervised)
+# Model-2 (PCA)
 
 
 ## Feature Expansion & Missing Data Imputation
