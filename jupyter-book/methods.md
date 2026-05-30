@@ -53,6 +53,12 @@ Our dataset captures survey results between 2001 and 2024. Our age range is betw
 
 ### Checking for Duplicates
 
+ ```python
+ distinct_counts = df.select(F.countDistinct("YEAR", "PERNUM", "SAMPLE", "SERIAL").alias("unique"))
+ distinct_counts.show()
+```
+
+
 Due to the large size of the dataset, it's difficult to look for duplicate rows on all rows. Instead, we will rely on the PERNUM column which uniquely identifies a person. We will combine this with YEAR (since the same person can respond multiple times across years) to identify potential duplicates. Also, as advised by the IPUMS website: "When combined with SAMPLE and SERIAL, PERNUM uniquely identifies each person within the IPUMS." As a safety precaution, we will use all 4 columns to uniquely identify a person's survey response in order to identify duplicates.
 
 | Metric | Value |
@@ -63,6 +69,11 @@ Due to the large size of the dataset, it's difficult to look for duplicate rows 
 There are no duplicates.
 
 ### Counting Nulls
+
+ ```python
+all_null_counts = df.select([F.count(F.when(F.isnan(c) | F.col(c).isNull(), c)).alias(c) for c in df.columns])
+all_null_counts.show(truncate=False)
+```
 
 | Column | Null count |
 |---|---:|
@@ -100,11 +111,22 @@ If we remove the instances of 9999999, the income distribution is:
 The income distribution appears to be between -19998 and 1945000 dollars with a mean income of 39466.50 dollars.
 
 ### Checking for code-defined missing data in Categorical Data
+
+ ```python
+df.groupBy("YEAR").count().sort("YEAR").show(df.count(), truncate=False)
+df.groupBy("STATEFIP").count().sort("STATEFIP").show(df.count(), truncate=False)
+df.groupBy("SEX").count().sort("SEX").show(truncate=False)
+df.groupBy("RACE").count().sort("RACE").show(truncate=False)
+df.groupBy("EDUC").count().sort("EDUC").show(truncate=False)
+```
+
+
+
 There are code scheme defined codes for missing data in the EDUC (code 99), SEX (code 9), and STATEFIP (code 99) columns. We checked if there are any instances of this form of missing data using `.groupBy()` and `.count()`, but the tables in [`data-exploration.ipynb`](./data-exploration.ipynb) reveal that these codes were not used. All data points of interest are present within these columns.
 
 
 
-### Preprocessing Plan 
+**Preprocessing Plan**
 
 Before analysis and modeling, the dataset was cleaned and transformed to improve data quality and prepare the data for machine learning and visualization tasks. Because the dataset contained approximately 67 million records and 238 variables, all preprocessing operations were performed using Spark.
 
