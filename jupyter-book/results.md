@@ -34,7 +34,8 @@ Include: accuracy metrics, confusion matrices, explained variance plots, cluster
 
 ### Plot5 Income vs Race 
 
-<img width="585" height="453" alt="Screenshot 2026-05-30 at 4 42 03 PM" src="https://github.com/user-attachments/assets/585c3b0a-83de-4a39-b4ee-f4f8390b59e0" />
+<img width="583" height="448" alt="Screenshot 2026-05-30 at 6 50 34 PM" src="https://github.com/user-attachments/assets/0f1cc0ce-1a48-4ed7-a85e-bde652a980b5" />
+
 
 
 ### Plot6 Education vs Income by Gender
