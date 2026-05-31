@@ -2,7 +2,7 @@
 
 ## Discussion Section (3 points)
 
-```python
+
 # Discussion
 
 ## 1. Initial Data Exploration & Scale Interpretation
@@ -35,7 +35,7 @@ An R² of 0.254 means our model accounts for only 25.4% of the variance in perso
 
 However, the major shortcoming is highlighted by the massive RMSE of over $31,500. Because the model was trained on raw linear income targets rather than a log-scaled target space, the squared error penalty heavily over-indexed on extreme high-income outliers. The Random Forest leaves were pulled toward these multi-million dollar wealth anomalies, severely degrading the model’s predictive accuracy for the median working-class demographic.
 
-```
+
 
 
 ## Fitting analysis (from Second Model)
