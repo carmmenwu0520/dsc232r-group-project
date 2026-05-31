@@ -1,6 +1,6 @@
 # Statement of Collaboration
 
-## Statement of Collaboration (3 points)
+<!-- ## Statement of Collaboration (3 points)
 
 This is a statement of contribution by each member. This will be taken into consideration when making the final grade for each member in the group.
 
@@ -14,4 +14,21 @@ There is no job that is better than the other:
 
 **Every role is important as long as you collaborated and were integral to the completion of the project. If a person did nothing, they risk getting a zero.** Just like in any job, if you did nothing, you risk getting fired. Teamwork is one of the most important qualities in industry and academia!
 
-**Format:** Start with `Name: Title: Contribution`. If someone contributed nothing, write: "Did not participate in the project."
+**Format:** Start with `Name: Title: Contribution`. If someone contributed nothing, write: "Did not participate in the project." -->
+
+## Edwin Vargas Navarro
+**Team Coordinator, Data, & Modeling**
+
+We didn't have a leader per se, but after each deadline I would copy and paste the milestone specs into our group chat, and depending on availability we would pick which part we can work on. It felt like we were a pretty solid team, meeting all the requirements in a timely manner. Then after we all did our parts, we left 1-2 days for revisions.
+
+In our initial brainstorming of ideas, we opted in picking IPUMS / census data, where I was able to figure out on how to load the data into expanse - properly linking column names from `usa_00001.xml` and the original `dat` file. 
+
+When it came time to train our first model, we ran into some out of memory issues - where I figured we can save compute by saving our data-preprocessed dataframe as a parquet file. Where, instead of computing the pre-processing steps again and again, we can load the new parquet file.
+
+Then finally, I worked on the extra credit, learning how to do all the ssh setup and creating a shell script to run the commands. Since I also did the speedup analysis, this was intuitive - just needed to use ray. All in all, I did coding, wrote about the sections I worked on the README / jupyterbook, and offered feedback during our revision stages.
+
+## Evan Lim
+
+## Jiamin Wu
+
+## Noopur Chowdary

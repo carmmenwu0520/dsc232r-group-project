@@ -35,6 +35,8 @@ project:
           file: data-modeling-income.ipynb
         - title: Speedup Analysis
           file: speedup-analysis.ipynb
+        - title: Framework Comparison (Spark vs Ray)
+          file: framework-comparison.ipynb
 site:
   title: Introduction
   template: book-theme
