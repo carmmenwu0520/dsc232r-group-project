@@ -2,8 +2,6 @@
 
 ## Conclusion (3 points)
 
-This is where you share your opinions and possible future directions. What would you have done differently? Close with final thoughts about:
-
 ### What We Learned About Big Data Processing
 
 The infrastructure lessons were just as real as the modeling ones. 
