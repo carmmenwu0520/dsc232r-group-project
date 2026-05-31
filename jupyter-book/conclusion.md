@@ -4,7 +4,7 @@
 
 This is where you share your opinions and possible future directions. What would you have done differently? Close with final thoughts about:
 
-## What We Learned About Big Data Processing
+### What We Learned About Big Data Processing
 
 The infrastructure lessons were just as real as the modeling ones. 
 Managing memory across 7 executors, dealing with 9999999.0 missing 
@@ -21,7 +21,7 @@ sparse vector for every single record, then scaling that across
 training. A target encoding or regional grouping would have been 
 smarter.
 
-## How Distributed Computing Changed Our Approach
+### How Distributed Computing Changed Our Approach
 
 On a single machine, running a Random Forest on 67 million rows 
 would take hours per iteration, making hyperparameter tuning 
@@ -37,7 +37,7 @@ which is about 48x slower. For a pipeline that needs to run on
 67 million rows repeatedly, that gap is the difference between 
 being able to iterate and being stuck waiting.
 
-## What We Would Explore With More Time and Resources
+### What We Would Explore With More Time and Resources
 
 With more executors and memory, we would bring back OCC1990 
 occupation data. We dropped it because grouping 400+ occupation 
@@ -54,9 +54,9 @@ to get more reliable performance estimates across the full dataset.
 
 ## Second model conclusion (from Second Model instructions)
 
-## What is the conclusion of your 2nd model? What can be done to improve it?
+### What is the conclusion of your 2nd model? What can be done to improve it?
 
-## Model 1
+### Model 1
 
 The Random Forest Classifier for education prediction hit ~47.8% 
 accuracy across 12 classes. That sounds bad, but it makes sense. 
@@ -74,7 +74,7 @@ bigger problem was RMSE. Because we predicted raw income instead of
 log-income, a few million-dollar outliers dragged the error way up 
 for everyone else.
 
-## Model 2: Second Model Conclusion
+### Model 2: Second Model Conclusion
 
 PCA reduced the feature space to 3 components for income (52% 
 variance kept) and 4 components for education (64.6% variance 
@@ -100,7 +100,7 @@ To improve Model 2, the three most impactful changes would be:
 - Use Gradient Boosted Trees instead of Random Forest, which tends 
   to outperform on tabular regression tasks like income prediction.
 
-## Final Thoughts
+### Final Thoughts
 
 The models are imperfect, but they tell an honest story. Higher 
 education correlates strongly with higher income, with EDUC 11 
