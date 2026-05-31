@@ -10,7 +10,11 @@ Include: accuracy metrics, confusion matrices, explained variance plots, cluster
 
 ### Plot-1 Income vs Education
 
-<img width="597" height="459" alt="Screenshot 2026-05-30 at 4 22 12 PM" src="https://github.com/user-attachments/assets/a65312ed-97d5-4dba-9f98-0c9b0b007439" />
+
+<img width="585" height="437" alt="Screenshot 2026-05-30 at 6 31 25 PM" src="https://github.com/user-attachments/assets/2ffe8a85-1ea9-4fb9-a84e-fb8362b9ae42" />
+
+
+
 
 ### Plot2  Income trend over Time
 
