@@ -1,10 +1,5 @@
 # Discussion
 
-## Discussion Section
-
-
-# Discussion
-
 ## 1. Initial Data Exploration & Scale Interpretation
 The exploration phase revealed a massive foundational dataset consisting of over 67 million rows and 238 variables. The initial thought process was strictly reductionist: while 238 attributes were present, a vast majority of them represented redundant demographic identifiers, spatial granularities, or high-dimensional socioeconomic codes. Isolating our variables of primary interest—YEAR, STATEFIP, SEX, AGE, RACE, EDUC, and INCTOT—was an intuitive starting step to establish a clean analytical baseline.
 
@@ -15,7 +10,7 @@ The transformation pipeline represents the core statistical foundation of the pr
 
 The thought process for filling missing income data was highly contextual. Rather than applying a global mean imputation, computing separate average personal income baselines grouped explicitly by YEAR was chosen. Because inflation distorts nominal purchasing power across decades, a global mean would have fundamentally corrupted the historical distribution. Multiplying nominal income by the CPI99 factor to create REALINCTOT successfully normalized the target space across time bounds.
 
-### Shortcomings:
+### Shortcomings
 * **The Log/Z-Score Conflict:** For numerical scaling, Z-score standardization was selected over min-max normalization because it is less susceptible to extreme outliers. However, while this successfully scaled AGE_Z, applying a standard Z-score directly to REALINCTOT proved problematic due to the severe, long-tailed rightward skew of wealth distributions. A signed logarithmic transformation should have been uniformly applied prior to calculating the Z-score to squeeze the variance and bring the distribution closer to normality.
 * **One-Hot Sparsity Tax:** Using a StringIndexer and OneHotEncoder pipeline on STATENAME created a 51-dimensional sparse vector for every single record. When scaled across 67 million rows, this created an incredibly wide feature matrix. This high-dimensional encoding choice dramatically escalated cluster memory requirements during model training, a bottleneck that could have been avoided by using a target encoding scheme or geographic regional grouping instead.
 
@@ -28,16 +23,16 @@ The model’s low accuracy is a direct consequence of target variable constructi
 
 While accuracy sits at ~47.8%, the underlying Macro-F1 score dropped significantly to 0.3899. This severe drop reveals that the model fell victim to extreme class imbalance. The dataset is heavily dominated by majority categories (e.g., High School Graduates and 4 Years of College). The Random Forest Classifier preserved global accuracy by prioritizing these majority patterns, effectively sacrificing minority classes (such as early vocational tracks or specialized nursery school brackets). To achieve true scientific merit, a class-weight balancing multiplier or down-sampling pipeline should have been integrated into the cluster training steps to force the estimator to treat minority classes with equal weight.
 
-## 4. Model 1 (Income Regressor Variation): Continuous Income Prediction
+## 4. Model 1 (Income Regressor): Continuous Income Prediction
 This reframed the problem as continuous regression to predict exactly how much money a person makes (their total real income, or REALINCTOT) based on facts about them, like their age, education level, gender, race, and the state they live in. The tuned architecture (30 trees, depth 12) achieved a test R² score of 0.254 and an RMSE of 31559.95.
 
 An R² of 0.254 means our model accounts for only 25.4% of the variance in personal income. In social science and economic modeling, an R² between 0.20 and 0.30 is highly standard and believable; human income is dictated by thousands of unobserved variables (such as industry sector, individual talent, family wealth, and employment tenure) that are completely absent from our data.
 
 However, the major shortcoming is highlighted by the massive RMSE of over $31,500. Because the model was trained on raw linear income targets rather than a log-scaled target space, the squared error penalty heavily over-indexed on extreme high-income outliers. The Random Forest leaves were pulled toward these multi-million dollar wealth anomalies, severely degrading the model’s predictive accuracy for the median working-class demographic.
 
-## Fitting analysis (from Second Model)
+## 5. Model 2: Fitting Analysis
 
-## 1. Where does your model fit in the fitting graph?
+### Where does your model fit in the fitting graph?
 **Ans:** Our model is slightly in the underfitting zone.
 
 * **Income Regressor (REALINCTOT):** The PCA reduced the feature space to just 3 components capturing only 51.99% of the variance. With a Random Forest trained on such information-sparse features, the model almost certainly achieves a training R² that is modest and a test R² that is only marginally lower — both values will be low in absolute terms. That flat gap between train and test performance (both mediocre) is a classic underfitting signature: the model isn't complex enough or informative enough to learn the true signal.
@@ -48,35 +43,35 @@ In both cases, the dominant cause of poor performance is the PCA bottleneck, not
 
 ---
 
-## 2. What are potential future improvements or next models?
+### What are potential future improvements or next models?
 **Ans:**
 
-### Feature Engineering:
+#### Feature Engineering
 * Retain more PCA components. The elbow method selected 3–4, but given that cumulative explained variance is only ~52–65%, we could reasonably try 6–8 components and observe whether validation metrics improve meaningfully.
 * Consider alternative dimensionality reduction techniques like truncated SVD or UMAP, which may capture non-linear structure that PCA misses.
 
-### Model Improvements:
+#### Model Improvements
 * Gradient Boosted Trees (GBT) in PySpark tend to outperform Random Forests on tabular data, especially for regression tasks like income prediction where outliers and skew are present.
 * Hyperparameter tuning via CrossValidator or TrainValidationSplit on numTrees, maxDepth, and minInstancesPerNode — the current model uses fixed hyperparameters.
 * For the classification task, experimenting with Gradient Boosted Classifier or a Multilayer Perceptron could improve F1 on minority education categories.
 
-### Data Improvements:
+#### Data Improvements
 * Re-introduce the OCC1990 occupation column with hierarchical grouping (e.g., collapsing ~400 occupations into ~15 broad sectors), which is likely one of the strongest predictors of income and education.
 * Include interaction or polynomial features on AGE (age-squared is a classic predictor of income in economics/labor literature).
    
-### Target Variable:
+#### Target Variable
 * The income regressor predicts raw REALINCTOT, which still has a heavy right skew even after log-transforming REALINCTOT_LOG for the features. Consider predicting REALINCTOT_LOG as the target (and inverting at evaluation time) to reduce the influence of extreme outliers on RMSE.
 
 ---
 
-## 3. How does dimensionality reduction affect your results compared to the full feature set?
+### How does dimensionality reduction affect your results compared to the full feature set?
 **Ans:** The effects are clearly negative in terms of raw predictive power.
 
-### Information Loss is Significant:
+#### Information Loss is Significant
 * **For Income:** 3 PCA components → 52% variance explained — nearly half the feature signal is discarded before the model even trains.
 * **For Education:** 4 PCA components → 64.6% variance explained — better, but still a substantial loss.
 
-### Why PCA Underperforms Here:
+#### Why PCA Underperforms Here
 The feature matrix is a mix of sparse one-hot encodings and dense scaled scalars. PCA on this kind of mixed-type, high-cardinality sparse matrix tends to absorb most variance into the state/geographic dimensions rather than the more predictive demographic and economic variables. The principal components may not align well with income or education signal.
 
 
