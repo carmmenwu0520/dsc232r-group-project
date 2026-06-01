@@ -1,8 +1,64 @@
 # Methods
 
-# Data Exploration
+## SDSC Expanse Environment Setup 
 
-  *Number of Columns and Rows*
+The very first step we had to consider for our project was our expanse envirnoment setup. For our setup, we requested 8 cores and 128GB total memory as shown below:
+
+![jupyter-session](../images/jupyter-session.png)
+
+Now in our JupyterLab session, we can do the following:
+
+```python
+spark = SparkSession.builder \
+    .config("spark.driver.memory", "2g") \
+    .config("spark.executor.memory", "18g") \
+    .config("spark.executor.instances", 7) \
+    .getOrCreate()
+```
+
+Formula for the above:
+
+- Executor instances = Total Cores - 1
+- Executor memory = (Total Memory - Driver Memory) / Executor Instances
+
+Our calculation:
+
+- Total Cores = `8`
+- Total Memory = `128GB`
+- Driver Memory = `2GB`
+- Executor Instances = `8 - 1 = 7`
+- Executor Memory = `(128 - 2) / 7 = 18GB` 
+
+
+### SparkSession Configuration and Justification
+
+When going through [Spark on HPC Best Practices: Example 3](https://github.com/ucsd-dsc232r/group-project/blob/main/SPARK_HPC_BEST_PRACTICES.md#example-3-8-cores-with-128gb-ram-high-memory), this setup most closely aligned with our needs. Since our data is 65GB, it's a fair amount above the 50GB that is mentioned in this example. 
+
+Spark executor/config evidence during data loading:
+
+![spark-ui](../images/spark-config.png)
+
+## Speedup Analysis
+
+After settling on the executor configuration above, we measured how much that distributed setup actually buys us. Using the same Spark job that trains our model, we timed a baseline run on 1 executor against our full 7-executor configuration. Following the warmup convention, the first run is discarded as JVM/configuration warmup and we average the next two runs.
+
+| Executors | Time (sec) | Speedup | Efficiency |
+|---|---:|---:|---:|
+| 1 | 7593.4 | 1.00x | 100% |
+| 7 | 1025.7 | 7.40x | 105.8% |
+
+**Metrics:**
+
+* T_1 = 7593.41s
+* T_7 = 1025.67s
+* speedup = T_1/T_7 = **7.40x**
+* efficiency = speedup/7 = **105.8%**
+
+**Amdahl:** Our estimated parallelizable fraction is p = 7 x 6.40 / (7.40 x 6) = 44.8 / 44.4 ~= **1** (from measured speedup). The theoretical speedup at n = 7 with this p is **~7.40x**, and we achieved essentially 100% of that limit. Training time dropped from ~2.1 hours (1 executor) to ~17 minutes (7 executors), showing the work benefits from distributed Spark executors on this dataset.
+
+## Data Exploration
+
+Now that we have finished our Expanse setup and know that it helps us work with big data, we can begin the exploration phase. We start by finding the number of columns and rows.
 
  ```python
 row_count = df.count()
@@ -127,20 +183,20 @@ There are code scheme defined codes for missing data in the EDUC (code 99), SEX 
 
 
 
-# Preprocessing Plan
+## Preprocessing Plan
 
 Before analysis and modeling, the dataset was cleaned and transformed to improve data quality and prepare the data for machine learning and visualization tasks. Because the dataset contained approximately 67 million records and 238 variables, all preprocessing operations were performed using Spark.
 
 ### 1. Handling Missing Values
 
-### For numerical variables such as AGE and INCTOT:
+#### For numerical variables such as AGE and INCTOT:
 
 Special missing-value codes were identified and replaced with null values.
 The proportion of missing values was examined for each variable.
 Missing values were imputed using appropriate summary statistics when necessary.
 Variables with excessive missingness were evaluated before further analysis.
 
-### For categorical variables such as SEX, RACE, EDUC, and MARST:
+#### For categorical variables such as SEX, RACE, EDUC, and MARST:
 
 Invalid or unknown category codes were identified and converted to null values.
 Missing categories were retained or imputed depending on the analytical requirements.
@@ -282,13 +338,13 @@ Outcome
 The preprocessing stage produced a cleaned and transformed dataset suitable for modelling , visualization, dimensionality reduction, and machine learning. Missing values were handled appropriately, categorical variables were encoded, numerical variables were standardized, inflation-adjusted income measures were created, and additional engineered features were generated to improve analytical usefulness.
 
 
-# Model-1( first distributed model)
+## Model 1 (First Distributed Model)
 
 As an initial modeling approach, Random Forest algorithms were applied to both classification and regression tasks to establish strong baseline models and evaluate the predictive power of the demographic and socioeconomic features available in the dataset. Random Forest was selected because it is a robust ensemble learning technique that can capture complex, non-linear relationships while remaining relatively resistant to overfitting.
 
 To investigate the impact of model complexity, two versions of Random Forest were trained for each task. The first model used numTrees=20 and maxDepth=10, while a second model with tuned hyperparameters used numTrees=30 and maxDepth=12. Performance was evaluated on training, validation, and test datasets.
 
-### Random Forest Classifier (Multiclass Education Prediction)-
+### Random Forest Classifier (Multiclass Education Prediction)
 We used a Random Forest Classifier to predict multiclass education levels (EDUC) using demographic and socioeconomic features such as income, age, sex, race, and state information
  Classification performance was evaluated using:
  1-Accuracy: The proportion of correctly classified observations.
@@ -379,10 +435,10 @@ print("test_rf30_d12 Results -> RMSE:", ev_rmse.evaluate(pred), "| MAE:", ev_mae
 
 
     
-# Model-2 (PCA)
+## Model 2 (PCA)
 
 
-## Feature Expansion & Missing Data Imputation
+### Feature Expansion & Missing Data Imputation
 Because Model 2 leverages Dimensionality Reduction (PCA), the feature space was expanded by extracting additional categorical columns from the original dataset (EMPSTAT, CITIZEN, WKSWORK1, MARRINYR, and HISPAN). This allows PCA to map a richer subset of features.
 Before transforming the space, placeholder values representing missing flags (such as 0 for employment and marriage variables) were explicitly set to None. Missing entries in categorical attributes were imputed using their statistical mode (e.g., 1 for employment status, 2 for citizenship status), while continuous columns (WKSWORK1) were filled using their statistical mean.
 
@@ -400,7 +456,7 @@ mean_val = df.select(F.mean("WKSWORK1")).collect()[0][0]
 df = df.fillna(mean_val, subset=["WKSWORK1"])
 ```
 
-## Categorical Encoding & Scaled Transformations
+### Categorical Encoding & Scaled Transformations
 To prepare the dataset for PCA, numerical tracking attributes with disparate ranges were normalized using a MinMaxScaler. Ordinal transformations were applied directly to inherently ranked variables like education levels (EDUC). For unranked geographical and demographic indices (STATEFIP, SEX, RACE, and HISPAN), a processing pipeline involving StringIndexer and OneHotEncoder was utilized to prevent the model from inferring a false numerical hierarchy.
 Additionally, because the target variable (REALINCTOT) suffered from a severe rightward skew, a signed logarithmic transformation (REALINCTOT_LOG) was implemented prior to calculating its final Z-score normalization.
 
@@ -425,7 +481,7 @@ df = df.withColumn("REALINCTOT_LOG", F.signum(F.col("REALINCTOT")) * F.log1p(F.a
 
 ```
 
-## Dimensionality Reduction via PCA
+### Dimensionality Reduction via PCA
 All processed numerical columns and high-dimensional one-hot encoded arrays were flattened into a single dense vector structure via a VectorAssembler. A Principal Component Analysis (PCA) estimator was fitted on the training split to identify the orthogonal axes capturing the highest variance.An initial evaluation up to $k=10$ components revealed that the first component explained 30.68% of the total variance, the second explained 14.00%, and the third explained 7.31%. Following the elbow method on the generated scree plot, the feature space was reduced to the top 3 principal components, capturing a cumulative variance of 51.99%.
 
 ```python
@@ -442,7 +498,7 @@ model = pca.fit(train_df)
 
 ```
 
-## Baseline Model Training (Random Forest)
+### Baseline Model Training (Random Forest)
 Using the compressed feature representations obtained from the 3 principal components, a RandomForestRegressor was established as the baseline supervisor to predict the real income target. The model was configured as an ensemble of 30 independent decision trees (numTrees=30), allowing each tree to grow to a maximum depth of 12 (maxDepth=12) to map non-linear relationships within the low-dimensional PCA projections.
 
 ```python
@@ -454,7 +510,7 @@ rf = RandomForestRegressor(labelCol="label", featuresCol="pca_features_3", predi
 model_baseline = rf.fit(train_final_df)
 
 ```
-## Performance Evaluation & Error Diagnosis
+### Performance Evaluation & Error Diagnosis
 The model's generalizability was measured systematically across the train, validation, and test subsets using Root Mean Squared Error (RMSE), Mean Absolute Error (MAE), and the Coefficient of Determination ($R^2$).The baseline model delivered a highly stable $R^2$ score of approximately 0.235 across all splits. While the consistent performance indicates high generalizability without overfitting, the restricted accuracy metrics reflect the loss of high-frequency information resulting from the aggressive dimensional compression down to 3 components. To assist future optimization, an absolute error tracking column was added to isolate and diagnose extreme prediction outliers.
 
 ```python
@@ -474,7 +530,7 @@ worst_outliers = pred_test.orderBy(F.col("error").desc()).select(["label", "pred
 
 ## Notebooks
 
-Analysis notebooks live at the **repository root** (not in a `notebooks/` folder). In the left sidebar, open the **Notebooks** section for the full pipeline in execution order.
+Open the **Notebooks** section for the full pipeline in execution order.
 
 | Step | Notebook |
 |------|----------|
@@ -483,7 +539,7 @@ Analysis notebooks live at the **repository root** (not in a `notebooks/` folder
 | Data exploration | `data-exploration.ipynb` |
 | Figures / EDA plots | `data-plots.ipynb` |
 | Preprocessing (Spark) | `data-preprocessing.ipynb` |
-| Model 1 — EDUC classifier | `data-modeling.ipynb` |
-| Model 1 — income regressor | `data-modeling-income.ipynb` |
+| Model 1: EDUC classifier | `data-modeling.ipynb` |
+| Model 1: income regressor | `data-modeling-income.ipynb` |
 | Speedup analysis | `speedup-analysis.ipynb` |
-| Model 2 — PCA / second model | `data-second-model.ipynb` (add to Notebooks when at repo root) |
+| Model 2: PCA / second model | `data-second-model.ipynb` |
