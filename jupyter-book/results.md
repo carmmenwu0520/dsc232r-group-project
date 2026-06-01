@@ -100,6 +100,45 @@ Random Forest Regression Performance Across Hyperparameter Settings and Dataset 
 
 ## Model-2
 
+### PCA explained variance
+
+**REALINCTOT model** (3 components selected, 51.99% cumulative variance):
+
+| Component | Explained variance |
+|---|---:|
+| PC1 | 30.68% |
+| PC2 | 14.00% |
+| PC3 | 7.31% |
+
+**EDUC model** (4 components selected, 64.57% cumulative variance):
+
+| Component | Explained variance |
+|---|---:|
+| PC1 | 24.63% |
+| PC2 | 23.44% |
+| PC3 | 10.84% |
+| PC4 | 5.66% |
+
+### Random Forest Regressor (REALINCTOT, 3 PCA components)
+
+Random Forest regression on PCA-reduced features (`numTrees=30`, `maxDepth=12`).
+
+| Split | RMSE | MAE | R² |
+|---|---:|---:|---:|
+| Train | 31994.74 | 15028.18 | 0.2350 |
+| Validation | 31954.07 | 15027.94 | 0.2347 |
+| Test | 31868.15 | 14998.55 | 0.2355 |
+
+### Random Forest Classifier (EDUC, 4 PCA components)
+
+Random Forest classification on PCA-reduced features (`numTrees=30`, `maxDepth=12`).
+
+| Split | Accuracy | F1 Score | Weighted Precision |
+|---|---:|---:|---:|
+| Train | 0.3704 | 0.3665 | 0.4329 |
+| Validation | 0.3704 | 0.3666 | 0.4332 |
+| Test | 0.3701 | 0.3663 | 0.4327 |
+
 ### Figure 1 – PCA Explained Variance – REALINCTOT Model
 
 <img width="566" height="418" alt="Screenshot 2026-05-31 at 6 24 23 PM" src="https://github.com/user-attachments/assets/fab82169-9ae9-4e3c-abbe-03b76fdab771" />
