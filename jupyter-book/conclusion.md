@@ -115,7 +115,7 @@ To improve Model 2, the three most impactful changes would be:
 
 The models are imperfect, but they tell an honest story. 
 Higher education correlates strongly with higher income, 
-with EDUC 11 averaging around $92k compared to just $19k 
+with EDUC 11 averaging around \$92k compared to just \$19k 
 at EDUC 0. The gender income gap shows up clearly at every 
 education level. Some race categories consistently earn 
 significantly less than others. The data confirmed what we 
