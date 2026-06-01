@@ -6,6 +6,10 @@ One of the main reasons we were interested in this project stems from how resear
 
 Due to the large scale and complexity of the data, which includes millions of records across multiple years, we relied on Apache Spark on SDSC Expanse (8 cores, 128 GB RAM per job). Even then, full-table preprocessing, feature encoding, and Random Forest training often ran for hours and sometimes failed when memory filled up. A laptop or single-node setup would have been far slower or effectively impossible for the same work at this scale.
 
+```{important}
+At this scale, distributed Spark on Expanse was required for full-table pipelines. Jobs could run for hours and still hit memory limits on 128 GB nodes.
+```
+
 ## Dataset Linkage
 
 - Primary dataset: [IPUMS USA](https://usa.ipums.org/usa/)

@@ -44,8 +44,9 @@
 <img width="994" height="382" alt="Screenshot 2026-05-31 at 8 31 44 PM" src="https://github.com/user-attachments/assets/e4122c13-193c-4d6a-8fe9-80d8bd308bf0" />
 
 
-The absolute values reflect the raw median personal income of all adult residents (including part-time workers, students, and retirees), which naturally trends lower than standard headlines that focus exclusively on full-time corporate earners or dual-income households.
-
+```{note}
+State medians use raw personal income for all adult residents (including part-time workers, students, and retirees), so values run lower than headlines focused on full-time or household earnings.
+```
 
 ### Relative Income by state
 
@@ -59,6 +60,10 @@ The absolute values reflect the raw median personal income of all adult resident
 
 
 ## Model-1
+
+```{warning}
+Model metrics below describe predictive fit on census microdata. They are associations, not proof that changing education or location causes income to change.
+```
 
 ### RandomForest Classfier
 

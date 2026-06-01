@@ -49,7 +49,9 @@ Expanse setup:
 
 ### Timings
 
-Same warmup convention as speedup analysis: run 1 is the first load on the node and we discard it; the reported number is avg runs 2-3.
+```{note}
+Timing convention matches speedup-analysis.ipynb: run 1 is warmup (first load on the node) and is discarded; reported times are the average of runs 2 and 3.
+```
 
 | Framework | Run 1 | Run 2 | Run 3 | Avg (runs 2-3) |
 |-----------|------:|------:|------:|---------------:|
@@ -73,6 +75,10 @@ Spark run 1 took about 63 seconds reading parquet from disk. Runs 2 and 3 were a
 | Ease of implementation (1-5) | 4 | 3 |
 
 We measured peak memory with GNU time -v on Expanse (one run per framework). Ray used much more than Spark in our runs, about 661 MB vs 42 MB.
+
+```{important}
+All runs used the same Expanse setup (8 CPUs, 128 GB, shared partition). Spark's faster repeat runs also reflect OS page cache after the first read; Ray stayed near ~88 s each run.
+```
 
 ## Analysis
 
