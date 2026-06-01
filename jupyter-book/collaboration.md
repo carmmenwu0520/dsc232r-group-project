@@ -29,6 +29,7 @@ Then finally, I worked on the extra credit, learning how to do all the ssh setup
 
 ## Evan Lim
 **Data Exploration, Preprocessing, & Modeling**
+
 I think everyone contributed to the project in a meaningful way.
 
 My primary responsibility was on programming. I'll break down my contributions by milestone.
