@@ -30,6 +30,7 @@ Then finally, I worked on the extra credit, learning how to do all the ssh setup
 ## Evan Lim
 
 ## Jiamin Wu
+**Writer & Conclusions**
 
 Everyone contributed consistently throughout the project 
 and we made sure to leave time at the end for revisions 
@@ -56,6 +57,7 @@ original research question about how education and income
 vary across demographics, regions, and time in the US.
 
 ## Noopur Chowdary
+**Exploration, Results, & Write-up**
 
 Milestone 1: For Milestone one, I actively took part in discussions to decide which dataset to choose for the project. Each member proposed their choice of datasets. After considering the pros and cons of each dataset, we collectively decided to go with the IPUMS / Census dataset.
 

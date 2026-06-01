@@ -10,12 +10,12 @@ project:
   jupyter: true
   toc:
     - file: jupyter-book/intro.md
-    - file: jupyter-book/figures.md
     - file: jupyter-book/methods.md
     - file: jupyter-book/results.md
     - file: jupyter-book/discussion.md
     - file: jupyter-book/conclusion.md
     - file: jupyter-book/collaboration.md
+    - file: jupyter-book/figures.md
     - file: jupyter-book/extra-credit.md
     - title: Notebooks
       children:
