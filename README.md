@@ -2,12 +2,12 @@
 
 Group project for DSC 232R: Big Data Analytics Using Spark
 
+![GitHub last commit](https://img.shields.io/github/last-commit/jedwin4321/dsc232r-group-project)
+![GitHub repo size](https://img.shields.io/github/repo-size/jedwin4321/dsc232r-group-project)
+
 > [!IMPORTANT]
 > **[Read the full project report here](https://jedwin4321.github.io/dsc232r-group-project/)**  
 > Navigable write-up with Methods, Results, Discussion, and notebooks. This README is the same content.
-
-![GitHub last commit](https://img.shields.io/github/last-commit/jedwin4321/dsc232r-group-project)
-![GitHub repo size](https://img.shields.io/github/repo-size/jedwin4321/dsc232r-group-project)
 
 ## Dataset Linkage
 
