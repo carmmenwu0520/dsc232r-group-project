@@ -472,14 +472,6 @@ worst_outliers = pred_test.orderBy(F.col("error").desc()).select(["label", "pred
 
 ```
 
-
-
-
-
-
-
-
-
 ## Notebooks
 
 Analysis notebooks live at the **repository root** (not in a `notebooks/` folder). In the left sidebar, open the **Notebooks** section for the full pipeline in execution order.

@@ -2,7 +2,7 @@
 
 For the extra credit task we ran the same data task in Spark and Ray, timed both, and compared the results. Our project already runs on Spark end to end, so seeing the differences between these two frameworks will be compelling. We follow a similar structure as speedup-analysis.ipynb with the warmup convention (run 1 discarded, avg runs 2-3). The code can be found in [framework-comparison.ipynb](../framework-comparison.ipynb).
 
-## Part 1: Implementation
+## Implementation
 
 We picked Option B: averaging INCTOT by STATEFIP (average income by state).
 
@@ -45,7 +45,7 @@ Expanse setup:
 - container: ~/esolares/singularity/spark_raydp.sif
 - module load singularitypro, then python3 inside the container
 
-## Part 2: Performance Comparison
+## Performance Comparison
 
 ### Timings
 
@@ -74,7 +74,7 @@ Spark run 1 took about 63 seconds reading parquet from disk. Runs 2 and 3 were a
 
 We measured peak memory with GNU time -v on Expanse (one run per framework). Ray used much more than Spark in our runs, about 661 MB vs 42 MB.
 
-## Part 3: Analysis
+## Analysis
 
 ### 1. Which framework was faster? By how much?
 

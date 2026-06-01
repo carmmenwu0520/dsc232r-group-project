@@ -1,12 +1,6 @@
 # Results
 
-## Results Section
-
-Present the results from your methods. Include figures about your results. No exploration or interpretation here—this is mainly a summary of your results. Sub-sections should mirror your Methods section.
-
-Include: accuracy metrics, confusion matrices, explained variance plots, clustering visualizations, etc.
-
-### Data Plots from phase Data Exploration
+## Data Plots from phase Data Exploration
 
 ### Plot-1 Income vs Education
 
@@ -64,7 +58,7 @@ The absolute values reflect the raw median personal income of all adult resident
 
 
 
-### Model-1
+## Model-1
 
 ### RandomForest Classfier
 
@@ -99,7 +93,7 @@ Random Forest Regression Performance Across Hyperparameter Settings and Dataset 
 
 
 
-### Model-2
+## Model-2
 
 ### Figure 1 – PCA Explained Variance – REALINCTOT Model
 

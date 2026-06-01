@@ -1,6 +1,6 @@
 # Conclusion
 
-## Conclusion (3 points)
+## Conclusion
 
 ### What We Learned About Big Data Processing
 
