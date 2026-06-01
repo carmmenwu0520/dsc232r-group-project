@@ -32,3 +32,11 @@ Then finally, I worked on the extra credit, learning how to do all the ssh setup
 ## Jiamin Wu
 
 ## Noopur Chowdary
+
+Milestone 1: For Milestone one, I actively took part in discussions to decide which dataset to choose for the project. Each member proposed their choice of datasets. After considering the pros and cons of each dataset, we collectively decided to go with the IPUMS / Census dataset.
+
+Milestone 2: Created data plots using Spark to explore and visualize the dataset.
+
+Milestone 3: Performed fitting analysis for Model 1, evaluating its performance across training and validation data.
+
+Milestone 4: Wrote the final report, including the methods, results, and discussion sections.
