@@ -81,4 +81,40 @@ Random Forest Regression Performance Across Hyperparameter Settings and Dataset 
 
 
 
+### Model-2
+
+### Figure 1 – PCA Explained Variance – REALINCTOT Model
+
+<img width="566" height="418" alt="Screenshot 2026-05-31 at 6 24 23 PM" src="https://github.com/user-attachments/assets/fab82169-9ae9-4e3c-abbe-03b76fdab771" />
+
+### Figure 2 – Distribution of Absolute Errors in REALINCTOT Predictions
+
+<img width="1226" height="453" alt="Screenshot 2026-05-31 at 6 24 52 PM" src="https://github.com/user-attachments/assets/1ffd34b2-5d5e-4ddb-b3fd-be4d02eb562c" />
+
+### Figure 3 – Distribution of Absolute Errors in REALINCTOT Predictions (Log Scale)
+
+<img width="637" height="443" alt="Screenshot 2026-05-31 at 6 25 07 PM" src="https://github.com/user-attachments/assets/aec71d44-2894-40e9-bc24-740f345743ef" />
+
+### Figure 4
+
+<img width="565" height="413" alt="Screenshot 2026-05-31 at 6 25 22 PM" src="https://github.com/user-attachments/assets/b90d4f30-466e-4e49-a723-22a59a203b16" />
+
+
+### Figure 5 – Confusion Matrix – EDUC Predictions (% of Total Data)
+
+<img width="553" height="562" alt="Screenshot 2026-05-31 at 6 32 42 PM" src="https://github.com/user-attachments/assets/0fece201-d65b-4b7c-a6ba-1778f5f8200d" />
+
+### Figure 6 – Confusion Matrix – EDUC Predictions (% per True Label)
+
+
+<img width="550" height="549" alt="Screenshot 2026-05-31 at 6 33 08 PM" src="https://github.com/user-attachments/assets/bca2f9f9-f776-465a-a8f0-70590b22a12a" />
+
+### Figure 7 – PCA Explained Variance – REALINCTOT vs. EDUC Models (updated the existing "Both PCA graphs" heading to include a figure number)
+
+<img width="401" height="293" alt="Screenshot 2026-05-31 at 6 33 31 PM" src="https://github.com/user-attachments/assets/98d72284-15d4-4de6-919c-95ce6a09d599" />
+
+
+
+
+
 
