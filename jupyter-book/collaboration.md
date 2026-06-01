@@ -39,4 +39,4 @@ Milestone 2: Created data plots using Spark to explore and visualize the dataset
 
 Milestone 3: Performed fitting analysis for Model 1, evaluating its performance across training and validation data.
 
-Milestone 4: Wrote the final report, including the methods, results, and discussion sections.
+Milestone 4: Compiled all the results and completed the final write-up in collaboration with Carmen.
