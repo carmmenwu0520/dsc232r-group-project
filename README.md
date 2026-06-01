@@ -339,6 +339,9 @@ We believe there are several directions we can explore to improve model performa
 
 Distributed computing was essential for this project given the scale of our dataset, which contains over 67 million records across 238 columns and exceeds 65 GB in size. During development, we found that attempting to run preprocessing and model training locally caused the server to crash repeatedly due to memory limitations, which is why we moved to saving the final preprocessed data as a Parquet file and loading it directly for modeling. By running on SDSC Expanse with 7 executor instances each allocated 18 GB of memory (totaling 126 GB across executors), we were able to hold the full dataset in distributed memory and train our Random Forest models, for example, fitting the Random Forest Regressor with numTrees=30 and maxDepth=12 across the full training split, in a reasonable amount of time that would not have been possible on a single machine.
 
+
+## MileStone 4
+
 ## Speedup Analysis
 
 Notebook: [`speedup-analysis.ipynb`](./speedup-analysis.ipynb)
@@ -360,6 +363,104 @@ We yield the following results on 1 exectutor (baseline) and 7 executors.
 * efficiency = speedup/7 = **105.8%**
 
 **Amdahl:** We get our estimated parallelizable fraction p = 7 × 6.40 / (7.40 x 6) = 44.8 / 44.4 ≈ **1** (from measured speedup). This leads to a theoretical speedup at n = 7 with this p is **≈ 7.40×** and we achieved esentially 100% of that limit. Training time dropped from ~2.1 hours (1 executor) to ~17 minutes (7 executors) which goes to show the tree building benefits from distributed Spark executors on this dataset.
+
+
+## Model 2 (PCA)
+
+We built two PCA-enhanced Random Forest models using U.S. Census microdata (IPUMS), predicting real income (**REALINCTOT**) and education level (**EDUC**). The core idea was to apply dimensionality reduction via PCA before training, and compare its performance against a non-PCA baseline model.
+
+---
+
+## Feature Expansion & Missing Data Imputation
+
+Because Model 2 leverages dimensionality reduction (PCA), the feature space was expanded by extracting additional categorical columns from the original dataset, including **EMPSTAT, CITIZEN, WKSWORK1, MARRINYR, and HISPAN**. This enrichment was intended to provide PCA with a richer representation of underlying structure.
+
+Before transformation, placeholder values representing missing flags (such as 0 for employment and marriage-related variables) were explicitly set to `None`. Missing entries in categorical attributes were imputed using their statistical mode (e.g., most frequent category such as 1 for employment status and 2 for citizenship status). Continuous variables (e.g., WKSWORK1) were imputed using their mean values.
+
+---
+
+## Categorical Encoding & Scaled Transformations
+
+To prepare the dataset for PCA, numerical variables with different scales were normalized using **MinMaxScaler**. Ordinal variables such as education level (**EDUC**) were encoded directly, preserving their inherent ranking.
+
+For nominal categorical variables (STATEFIP, SEX, RACE, and HISPAN), a preprocessing pipeline using **StringIndexer** and **OneHotEncoder** was applied to avoid introducing false ordinal relationships.
+
+Additionally, because the target variable (**REALINCTOT**) was heavily right-skewed, a signed logarithmic transformation (**REALINCTOT_LOG**) was applied prior to Z-score normalization.
+
+---
+
+## Dimensionality Reduction via PCA
+
+All processed numerical features and high-dimensional one-hot encoded vectors were combined into a single dense representation using a **VectorAssembler**. A PCA model was then fitted on the training data to identify orthogonal components capturing maximum variance.
+
+An initial evaluation up to **k = 10 components** showed:
+
+- PC1 explained **30.68%** of variance  
+- PC2 explained **14.00%**  
+- PC3 explained **7.31%**
+
+Using the elbow method on the scree plot, the feature space was reduced to the top **3 principal components**, capturing a cumulative **51.99%** of total variance.
+
+---
+
+## Baseline Model Training (Random Forest)
+
+Using the compressed PCA features, a **RandomForestRegressor** was trained to predict real income. The model consisted of **30 decision trees (numTrees = 30)** with a maximum depth of **12 (maxDepth = 12)**.
+
+---
+
+## Performance Evaluation & Error Diagnosis
+
+Model performance was evaluated across training, validation, and test splits using:
+
+- Root Mean Squared Error (RMSE)  
+- Mean Absolute Error (MAE)  
+- Coefficient of Determination (R²)
+
+The model achieved a stable **R² ≈ 0.235** across all splits. While this consistency suggests strong generalization and minimal overfitting, the overall performance was limited due to information loss from aggressive dimensionality reduction.
+
+To further analyze errors, an absolute error tracking column was introduced to identify extreme prediction outliers.
+
+---
+
+## Results
+
+For the income (**REALINCTOT**) model, PCA was initially evaluated with 10 components. The elbow method selected **3 components**, which explained only **51.99%** of total variance:
+
+- PC1: 30.68%  
+- PC2: 14.00%  
+- PC3: 7.31%
+
+For the education (**EDUC**) model, **4 components** were selected, explaining **64.57%** of variance:
+
+- PC1: 24.63%  
+- PC2: 23.44%  
+- PC3: 10.84%  
+- PC4: 5.66%
+
+In both cases, the explained variance was relatively low, indicating that PCA was not highly effective for capturing predictive structure.
+
+---
+
+## Fitting Analysis & Conclusion
+
+Both models fall into an **underfitting regime**, not due to insufficient model complexity, but because PCA removed too much predictive information.
+
+With only 3 components (~52% variance) for income and 4 components (~64.6% variance) for education, the Random Forest models were trained on overly compressed feature representations. This resulted in low training and test performance with minimal gap between them — a classic sign of underfitting.
+
+### Future Improvements
+
+- Retain more PCA components (e.g., 6–8)  
+- Use Gradient Boosted Trees for stronger tabular performance  
+- Reintroduce structured features such as OCC1990 (grouped into occupation sectors)  
+- Predict log-transformed income directly to reduce skew effects  
+
+In summary, dimensionality reduction was the primary bottleneck. PCA on mixed sparse and dense features concentrated variance into a small number of components that did not align well with the most predictive demographic and economic signals.
+
+
+
+  
+  
 
 ## Team Contact
 
