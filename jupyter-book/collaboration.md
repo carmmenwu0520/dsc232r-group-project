@@ -31,6 +31,30 @@ Then finally, I worked on the extra credit, learning how to do all the ssh setup
 
 ## Jiamin Wu
 
+Everyone contributed consistently throughout the project 
+and we made sure to leave time at the end for revisions 
+as a team.
+
+My primary role was as the team writer. In Milestone 2, 
+I wrote explanations for the exploratory visualizations, 
+helping connect the figures around income, education, 
+gender, race, and state-level differences back to our 
+core research question. In Milestone 3, I wrote the 
+conclusion for Model 1, summarizing the Random Forest 
+classifier and regressor results, walking through the 
+fitting analysis, and laying out improvement suggestions 
+such as reintroducing occupation data and switching to 
+log-income as the regression target. For the final 
+submission, I authored the Conclusion section, which 
+required reading through and synthesizing content from 
+every part of the project, the data exploration findings, 
+preprocessing decisions, Model 1 classifier and regressor 
+results, Model 2 PCA analysis, the Spark vs Ray comparison, 
+and the Discussion section, and pulling it all together 
+into a cohesive narrative that connected back to our 
+original research question about how education and income 
+vary across demographics, regions, and time in the US.
+
 ## Noopur Chowdary
 
 Milestone 1: For Milestone one, I actively took part in discussions to decide which dataset to choose for the project. Each member proposed their choice of datasets. After considering the pros and cons of each dataset, we collectively decided to go with the IPUMS / Census dataset.
