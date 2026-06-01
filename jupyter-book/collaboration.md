@@ -28,6 +28,20 @@ When it came time to train our first model, we ran into some out of memory issue
 Then finally, I worked on the extra credit, learning how to do all the ssh setup and creating a shell script to run the commands. Since I also did the speedup analysis, this was intuitive - just needed to use ray. All in all, I did coding, wrote about the sections I worked on the README / jupyterbook, and offered feedback during our revision stages.
 
 ## Evan Lim
+**Data Exploration, Preprocessing, & Modeling**
+I think everyone contributed to the project in a meaningful way.
+
+My primary responsibility was on programming. I'll break down my contributions by milestone.
+
+Milestone 1: I helped look for various datasets on Kaggle, HuggingFace, and other dataset aggregation websites. I put forward some datasets that we might have found interesting/easy to work with.
+
+Milestone 2: I completed the Data Exploration section, writing code to show the columns, rows, aggregations, categorical/continuous variables, checking for missing data, and checking for duplicate data. I also did most of the write up for this section.
+
+Milestone 3: I completed the Data Preprocessing section, implementing the preprocessing plan in the previous milestone. I normalized numeric columns, applied one hot encoding to categorical columns, removed missing values, and neatly packaged the data for the next person (Edwin) to train the first model.
+
+Milestone 4: I trained the second models with PCA with some help from Edwin. I did another round of preprocessing to add extra columns, applied PCA to these columns, and trained the new models with these principle components. I outputted graphs and metrics for PCA and the final models.
+
+I checked and gave minor feedback on final READMEs and made small changes where necessary.
 
 ## Jiamin Wu
 **Writer & Conclusions**
