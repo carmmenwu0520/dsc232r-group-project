@@ -44,6 +44,19 @@ Include: accuracy metrics, confusion matrices, explained variance plots, cluster
 
 
 
+### Plot7  US State Median Income Distribution
+
+<img width="1000" height="364" alt="Screenshot 2026-05-31 at 8 43 28 PM" src="https://github.com/user-attachments/assets/cdff9e74-cfd9-4b22-84e8-c56738e3b504" />
+
+
+
+
+### Relative Income by state
+<img width="994" height="382" alt="Screenshot 2026-05-31 at 8 31 44 PM" src="https://github.com/user-attachments/assets/e4122c13-193c-4d6a-8fe9-80d8bd308bf0" />
+
+
+
+
 
 
 ### Model-1
