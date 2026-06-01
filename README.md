@@ -1,9 +1,12 @@
-# dsc232r-group-project
+# US Census Income and Education Analysis
+
 Group project for DSC 232R: Big Data Analytics Using Spark
+
+> **[Read the full project report here](https://jedwin4321.github.io/dsc232r-group-project/)**  
+> Navigable write-up with Methods, Results, Discussion, and notebooks. This README is the same content.
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/jedwin4321/dsc232r-group-project)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jedwin4321/dsc232r-group-project)
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-brightgreen)](https://jedwin4321.github.io/dsc232r-group-project/) 
 
 ## Dataset Linkage
 
