@@ -9,12 +9,8 @@ Group project for DSC 232R: Big Data Analytics Using Spark
 > **[Read the full project report here](https://jedwin4321.github.io/dsc232r-group-project/)**  
 > Navigable write-up with Methods, Results, Discussion, and notebooks. This README is the same content.
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Introduction
 
@@ -42,12 +38,8 @@ For project questions, reach out to:
 - Jiamin Wu: [jiw294@ucsd.edu](mailto:jiw294@ucsd.edu)
 - Noopur Chowdary: [nchowdary@ucsd.edu](mailto:nchowdary@ucsd.edu)
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Methods
 
@@ -595,12 +587,8 @@ Open the **Notebooks** section for the full pipeline in execution order.
 | Speedup analysis | `speedup-analysis.ipynb` |
 | Model 2: PCA / second model | `data-second-model.ipynb` |
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Results
 
@@ -776,12 +764,8 @@ Random Forest classification on PCA-reduced features (`numTrees=30`, `maxDepth=1
 
 <img width="401" height="293" alt="Screenshot 2026-05-31 at 6 33 31 PM" src="https://github.com/user-attachments/assets/98d72284-15d4-4de6-919c-95ce6a09d599" />
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Discussion
 
@@ -864,12 +848,8 @@ The feature matrix is a mix of sparse one-hot encodings and dense scaled scalars
 
 Bottom line: Dimensionality reduction via PCA hurt predictive accuracy in exchange for a simpler, faster-to-train model. Given that the original dataset has many one-hot-encoded sparse features, PCA is not the ideal choice for this data structure.
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Conclusion
 
@@ -995,12 +975,8 @@ significantly less than others. The data confirmed what we
 expected going in, and the models captured the broad trends 
 even if they could not nail the fine-grained details.
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Statement of Collaboration
 
@@ -1072,12 +1048,8 @@ Milestone 3: Performed fitting analysis for Model 1, evaluating its performance 
 
 Milestone 4: Compiled all the results and completed the final write-up in collaboration with Carmen.
 
-<br clear="all" />
+---
 
-<hr style="border: 0; height: 8px; background-color: #182B49; margin: 0;" />
-<hr style="border: 0; height: 4px; background-color: #FFCD00; margin: 0;" />
-
-<br clear="all" />
 
 # Extra Credit: Spark vs Ray
 
