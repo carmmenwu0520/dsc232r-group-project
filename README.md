@@ -11,9 +11,9 @@ Group project for DSC 232R: Big Data Analytics Using Spark
 
 ---
 
-> **[View the Introduction on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/)**
-
 # Introduction
+
+> **[View the Introduction on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/)**
 
 In this project, we analyzed data from the [IPUMS USA dataset](https://usa.ipums.org/usa/), which provides harmonized U.S. census and survey data across multiple years. We then constructed a dataset spanning from 2001 to 2024. The data includes variables such as total income, educational attainment, geographic region or state, survey year, age, sex, and employment status, with a total size exceeding 65 GB with millions of records. **Our research investigates how the relationship between education and income varies across regions and time, and to what extent education predicts income across different geographic regions.**
 
@@ -41,9 +41,9 @@ For project questions, reach out to:
 
 ---
 
-> **[View the Methods on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/methods/)**
-
 # Methods
+
+> **[View the Methods on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/methods/)**
 
 ## SDSC Expanse Environment Setup 
 
@@ -591,9 +591,9 @@ Open the **Notebooks** section for the full pipeline in execution order.
 
 ---
 
-> **[View the Results on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/results/)**
-
 # Results
+
+> **[View the Results on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/results/)**
 
 ## Data Plots from phase Data Exploration
 
@@ -769,9 +769,9 @@ Random Forest classification on PCA-reduced features (`numTrees=30`, `maxDepth=1
 
 ---
 
-> **[View the Discussion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/discussion/)**
-
 # Discussion
+
+> **[View the Discussion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/discussion/)**
 
 ## 1. Initial Data Exploration & Scale Interpretation
 The exploration phase revealed a massive foundational dataset consisting of over 67 million rows and 238 variables. The initial thought process was strictly reductionist: while 238 attributes were present, a vast majority of them represented redundant demographic identifiers, spatial granularities, or high-dimensional socioeconomic codes. Isolating our variables of primary interest—YEAR, STATEFIP, SEX, AGE, RACE, EDUC, and INCTOT—was an intuitive starting step to establish a clean analytical baseline.
@@ -854,9 +854,9 @@ Bottom line: Dimensionality reduction via PCA hurt predictive accuracy in exchan
 
 ---
 
-> **[View the Conclusion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/conclusion/)**
-
 # Conclusion
+
+> **[View the Conclusion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/conclusion/)**
 
 ## Conclusion
 
@@ -982,11 +982,9 @@ even if they could not nail the fine-grained details.
 
 ---
 
-> **[View the Statement of Collaboration on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/collaboration/)**
-
 # Statement of Collaboration
 
-
+> **[View the Statement of Collaboration on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/collaboration/)**
 
 ## Edwin Vargas Navarro
 **Team Coordinator, Data, & Modeling**
@@ -1056,9 +1054,9 @@ Milestone 4: Compiled all the results and completed the final write-up in collab
 
 ---
 
-> **[View the Extra Credit on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/extra-credit/)**
-
 # Extra Credit: Spark vs Ray
+
+> **[View the Extra Credit on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/extra-credit/)**
 
 For the extra credit task we ran the same data task in Spark and Ray, timed both, and compared the results. Our project already runs on Spark end to end, so seeing the differences between these two frameworks will be compelling. We follow a similar structure as speedup-analysis.ipynb with the warmup convention (run 1 discarded, avg runs 2-3). The code can be found in [framework-comparison.ipynb](framework-comparison.ipynb).
 
