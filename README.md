@@ -11,6 +11,7 @@ Group project for DSC 232R: Big Data Analytics Using Spark
 
 ---
 
+> **[View the Introduction on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/)**
 
 # Introduction
 
@@ -40,6 +41,7 @@ For project questions, reach out to:
 
 ---
 
+> **[View the Methods on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/methods/)**
 
 # Methods
 
@@ -589,6 +591,7 @@ Open the **Notebooks** section for the full pipeline in execution order.
 
 ---
 
+> **[View the Results on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/results/)**
 
 # Results
 
@@ -766,6 +769,7 @@ Random Forest classification on PCA-reduced features (`numTrees=30`, `maxDepth=1
 
 ---
 
+> **[View the Discussion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/discussion/)**
 
 # Discussion
 
@@ -850,6 +854,7 @@ Bottom line: Dimensionality reduction via PCA hurt predictive accuracy in exchan
 
 ---
 
+> **[View the Conclusion on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/conclusion/)**
 
 # Conclusion
 
@@ -977,6 +982,7 @@ even if they could not nail the fine-grained details.
 
 ---
 
+> **[View the Statement of Collaboration on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/collaboration/)**
 
 # Statement of Collaboration
 
@@ -1050,6 +1056,7 @@ Milestone 4: Compiled all the results and completed the final write-up in collab
 
 ---
 
+> **[View the Extra Credit on GitHub Pages →](https://jedwin4321.github.io/dsc232r-group-project/extra-credit/)**
 
 # Extra Credit: Spark vs Ray
 
