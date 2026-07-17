@@ -8,6 +8,8 @@ project:
     - name: Noopur Chowdary
   github: jedwin4321/dsc232r-group-project
   jupyter: true
+  description: Four-person Apache Spark analysis of 67 million IPUMS USA census records (2001-2024) on how education predicts income across U.S. regions.
+  thumbnail: images/dsc232r_linkedin_thumbnail.png
   toc:
     - file: jupyter-book/intro.md
     - file: jupyter-book/methods.md
